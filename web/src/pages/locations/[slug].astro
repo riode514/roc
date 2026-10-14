@@ -1,0 +1,20 @@
+---
+import ParishPage from '../../components/ParishPage.astro';
+import { getProperties, PARISHES } from '../../lib/properties.js';
+import { parishSlug } from '../../lib/content.js';
+
+export async function getStaticPaths() {
+  const all = await getProperties();
+  return PARISHES.map((name) => ({
+    params: { slug: parishSlug(name) },
+    props: {
+      name,
+      properties: all.filter((p) => p.parish === name).slice(0, 6),
+      others: PARISHES.filter((p) => p !== name),
+    },
+  }));
+}
+
+const { name, properties, others } = Astro.props;
+---
+<ParishPage name={name} properties={properties} others={others} lang="en" />

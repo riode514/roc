@@ -66,6 +66,19 @@ export function parsePage(html, { lang, path, key }) {
     if (len > best) { best = len; $scope = $c; }
   }
 
+  // The legal notices are published as a single <p> with <br> between the
+  // paragraphs — 1,500 characters in one element. Split those back into real
+  // paragraphs before anything is collected, or the page arrives as one slab.
+  $scope.find('p').each((_, el) => {
+    const $p = $(el);
+    if (!$p.find('br').length) return;
+    const parts = ($p.html() ?? '')
+      .split(/(?:\s*<br\s*\/?>\s*)+/i)
+      .map((s) => s.trim())
+      .filter((s) => clean(s.replace(/<[^>]+>/g, '')).length > 1);
+    if (parts.length > 1) $p.replaceWith(parts.map((s) => `<p>${s}</p>`).join(''));
+  });
+
   const blocks = [];
   const seen = new Set();
   const pushText = (type, text) => {

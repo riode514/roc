@@ -5,7 +5,8 @@ import SiteFooter from './SiteFooter.astro';
 import PropertyCard from './PropertyCard.astro';
 import AgiaBanner from './AgiaBanner.astro';
 import { PARISHES, getProperties, typeOf } from '../lib/properties.js';
-import { LOCALES, PARISH_NOTES, localeBase, t } from '../lib/i18n.js';
+import { LOCALES, localeBase, t } from '../lib/i18n.js';
+import { getParish, parishUrl } from '../lib/content.js';
 
 const { lang = 'en' } = Astro.props;
 const base = localeBase(lang);
@@ -214,7 +215,7 @@ const c = t(lang);
         <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:clamp(32px,3vw,46px);line-height:1.12;margin:0 0 40px;">{c.whereToLive}</h2>
         <div style="border-top:1px solid #DDDBD6;">
           {PARISHES.map((name, i) => (
-            <a class="roc-parish-row" href={`${base}/residences/?parish=${encodeURIComponent(name)}`}
+            <a class="roc-parish-row" href={parishUrl(name, lang)}
                data-parish={name} aria-expanded={i === 0 ? 'true' : 'false'} style="display:block;">
               <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;">
                 <span class="roc-parish-name" style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;font-size:24px;">{name}</span>
@@ -222,7 +223,7 @@ const c = t(lang);
                   {parishCounts[name]} {parishCounts[name] === 1 ? c.property : c.properties} <span style="font-size:13px;">→</span>
                 </span>
               </div>
-              <p class="roc-parish-note" style="font-size:14px;line-height:1.65;color:#8A877F;margin:8px 0 0;max-width:520px;">{PARISH_NOTES[lang]?.[name] ?? PARISH_NOTES.en[name]}</p>
+              <p class="roc-parish-note" style="font-size:14px;line-height:1.65;color:#8A877F;margin:8px 0 0;max-width:520px;">{getParish(name, lang)?.intro}</p>
             </a>
           ))}
         </div>

@@ -1,31 +1,36 @@
-// News and the standing pages.
+// News, the standing pages and the parish profiles — the editorial side of
+// the site, as against the listings.
 //
-// News is a feed that keeps changing, so it lives in Supabase alongside the
-// listings. The about and legal pages are standing text that changes once in
-// a blue moon, so they are a file in the repo — versioned, diffable, and one
-// less round trip at build time.
+// All three are files in the repo rather than database rows. The listings earn
+// their place in Supabase: 76 of them, filtered, served as a JSON API, and
+// re-checked nightly for ones that have sold. The editorial content is none of
+// those things — 29 articles in four years, four legal pages, seven parish
+// profiles, all static once written. Keeping them as files makes them
+// versioned and diffable, and the scheduled crawl commits any change rather
+// than writing to a table nothing else reads.
 
 import { readFileSync } from 'node:fs';
-import { createClient } from '@supabase/supabase-js';
 import { DEFAULT_LOCALE, INTL_LOCALE, localeBase } from './i18n.js';
-
-const SUPABASE_URL = process.env.SUPABASE_URL ?? import.meta.env.SUPABASE_URL;
-const SUPABASE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY ?? import.meta.env.SUPABASE_PUBLISHABLE_KEY;
 
 // --- news -------------------------------------------------------------------
 
-export async function getNews() {
-  if (!SUPABASE_URL || !SUPABASE_KEY) {
-    throw new Error('SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY must be set to build the site');
-  }
-  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: false } });
-  const { data, error } = await supabase
-    .from('news_feed')
-    .select('*')
-    .order('published_on', { ascending: false });
+let newsCache = null;
 
-  if (error) throw new Error(`Supabase: ${error.message}`);
-  return (data ?? []).map(normaliseArticle);
+export async function getNews() {
+  if (!newsCache) {
+    const url = new URL('../../../scraper/roc-news.json', import.meta.url);
+    newsCache = JSON.parse(readFileSync(url, 'utf8'))
+      .map(toRow)
+      .sort((a, b) => String(b.published_on).localeCompare(String(a.published_on)));
+  }
+  return newsCache;
+}
+
+/** The crawl writes an array of translations; the templates want them keyed. */
+function toRow(a) {
+  const translations = {};
+  for (const t of a.translations ?? []) translations[t.lang] = t;
+  return normaliseArticle({ ...a, translations });
 }
 
 function normaliseArticle(row) {
@@ -89,4 +94,39 @@ export function getPage(key, lang) {
     }
   }
   return null;
+}
+
+// --- parish profiles --------------------------------------------------------
+//
+// Written for us rather than scraped: short editorial profiles of the seven
+// parishes, in all four languages. They replace the one-line notes that were
+// here before, which still referred to the Vallnord ski brand — retired when
+// Pal Arinsal folded into Grandvalira Resorts.
+
+let parishCache = null;
+
+export function getParishProfiles() {
+  if (parishCache) return parishCache;
+  const url = new URL('../../../scraper/roc-parishes.json', import.meta.url);
+  parishCache = JSON.parse(readFileSync(url, 'utf8'));
+  return parishCache;
+}
+
+/** One parish in one language, falling back to English. */
+export function getParish(name, lang) {
+  const all = getParishProfiles();
+  const entry = all[name];
+  if (!entry) return null;
+  return entry[lang] ?? entry[DEFAULT_LOCALE] ?? null;
+}
+
+/** URL-safe slug for a parish name, e.g. "Sant Julià de Lòria" -> sant-julia-de-loria */
+export function parishSlug(name) {
+  return String(name)
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+export function parishUrl(name, lang) {
+  return `${localeBase(lang)}/locations/${parishSlug(name)}/`;
 }

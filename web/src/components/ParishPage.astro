@@ -1,0 +1,108 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from './SiteHeader.astro';
+import SiteFooter from './SiteFooter.astro';
+import AgiaBanner from './AgiaBanner.astro';
+import PropertyCard from './PropertyCard.astro';
+import { getParish, parishUrl } from '../lib/content.js';
+import { localeBase, t } from '../lib/i18n.js';
+
+const { name, properties = [], others = [], lang = 'en' } = Astro.props;
+const c = t(lang);
+const p = getParish(name, lang);
+const base = localeBase(lang);
+
+const cover = properties.find((x) => x.cover)?.cover ?? null;
+---
+<Base title={`${name} · ROC Propietats`} description={p?.intro ?? name} lang={lang} image={cover}>
+  <div style="background:#F5F0EB;">
+    <SiteHeader tone="dark" lang={lang} />
+  </div>
+
+  <section style="position:relative;background:var(--roc-ink,#13294B);color:#fff;overflow:hidden;">
+    {cover && (
+      <img src={cover} alt="" fetchpriority="high" decoding="async"
+           style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" />
+    )}
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(19,41,75,.74) 0%,rgba(19,41,75,.52) 45%,rgba(19,41,75,.86) 100%);"></div>
+    <div style="position:relative;max-width:1400px;margin:0 auto;padding:96px 40px 80px;">
+      <a href={`${base}/#parishes`} style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.75);">
+        ← {c.sevenParishes}
+      </a>
+      <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:clamp(40px,5vw,76px);line-height:1.02;margin:26px 0 20px;">{name}</h1>
+      {p?.intro && (
+        <p style="font-size:18px;line-height:1.65;color:rgba(255,255,255,.88);max-width:620px;margin:0;text-wrap:pretty;">{p.intro}</p>
+      )}
+      {p?.highlights?.length > 0 && (
+        <ul style="display:flex;gap:14px;flex-wrap:wrap;list-style:none;padding:0;margin:34px 0 0;">
+          {p.highlights.map((h) => (
+            <li style="font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;border:1px solid rgba(255,255,255,.4);border-radius:2px;padding:9px 15px;">{h}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </section>
+
+  {p?.body?.length > 0 && (
+    <section style="padding:88px 40px 72px;">
+      <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:64px;align-items:start;">
+        <div>
+          <div style="width:40px;height:1px;background:var(--roc-accent,#8A8A7A);margin-bottom:26px;"></div>
+          <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:clamp(28px,3vw,42px);line-height:1.12;margin:0;text-wrap:balance;">
+            {c.whereToLive}
+          </h2>
+        </div>
+        <div style="grid-column:span 2;max-width:760px;min-width:0;">
+          {p.body.map((para, i) => (
+            <p style={`font-size:${i === 0 ? '17.5px' : '16px'};line-height:1.8;color:${i === 0 ? '#13294B' : '#3A3B38'};margin:0 0 22px;text-wrap:pretty;`}>{para}</p>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section style="padding:0 40px 100px;">
+    <div style="max-width:1400px;margin:0 auto;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:28px;flex-wrap:wrap;padding-bottom:24px;border-bottom:1px solid #DDDBD6;margin-bottom:44px;">
+        <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:clamp(26px,2.6vw,36px);margin:0;">
+          {c.resTitle} · {name}
+        </h2>
+        <span style="font-size:12.5px;color:#8A877F;">
+          {properties.length} {properties.length === 1 ? c.property : c.properties}
+        </span>
+      </div>
+
+      {properties.length > 0 ? (
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:32px;">
+          {properties.map((x) => <PropertyCard property={x} lang={lang} />)}
+        </div>
+      ) : (
+        <p style="color:#8A877F;font-size:16px;margin:0 0 20px;">{c.none}</p>
+      )}
+
+      <div style="display:flex;justify-content:center;margin-top:52px;">
+        <a href={`${base}/residences/?parish=${encodeURIComponent(name)}`} class="roc-btn-navy"
+           style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:15px 34px;border:1px solid var(--roc-ink,#13294B);border-radius:2px;transition:all .25s ease;">
+          {c.viewAll}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {others.length > 0 && (
+    <section style="padding:0 40px 100px;">
+      <div style="max-width:1400px;margin:0 auto;">
+        <div style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A877F;margin-bottom:22px;">{c.sevenParishes}</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          {others.map((o) => (
+            <a href={parishUrl(o, lang)} class="roc-btn-navy"
+               style="font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:11px 18px;border:1px solid #DDDBD6;border-radius:2px;transition:all .25s ease;">{o}</a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <AgiaBanner lang={lang} />
+  <SiteFooter lang={lang} />
+</Base>

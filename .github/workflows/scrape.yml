@@ -27,6 +27,8 @@ jobs:
   scrape:
     runs-on: ubuntu-latest
     timeout-minutes: 240
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -49,8 +51,36 @@ jobs:
           ROC_LANGS: ${{ github.event.inputs.languages || 'ca,en' }}
         run: node src/index.js
 
-      - name: Rebuild the site with fresh data
-        if: success() && env.NETLIFY_BUILD_HOOK != ''
+      # The editorial content — news, the standing pages — is versioned in the
+      # repo rather than stored in the database, so a change arrives as a
+      # commit. Netlify builds on push, which also covers the listings.
+      - name: Refresh news and standing pages
+        working-directory: scraper
+        env:
+          ROC_CRAWL_DELAY_MS: ${{ github.event.inputs.crawl_delay_ms || '33000' }}
+        run: |
+          node src/scrape-news.js --out roc-news.json
+          node src/scrape-pages.js --out roc-pages.json
+
+      - name: Commit any editorial change
+        id: commit
+        run: |
+          git config user.name  "roc-scraper[bot]"
+          git config user.email "roc-scraper[bot]@users.noreply.github.com"
+          git add scraper/roc-news.json scraper/roc-pages.json
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No editorial change."
+          else
+            git commit -m "Refresh news and standing pages"
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Only needed when nothing was pushed; a push builds on its own.
+      - name: Rebuild the site
+        if: success() && steps.commit.outputs.changed == 'false'
         env:
           NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
-        run: curl -fsS -X POST -d '{}' "$NETLIFY_BUILD_HOOK"
+        run: |
+          if [ -n "$NETLIFY_BUILD_HOOK" ]; then curl -fsS -X POST -d '{}' "$NETLIFY_BUILD_HOOK"; fi

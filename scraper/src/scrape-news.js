@@ -1,13 +1,13 @@
-// Crawls ROC's news section in every language.
+// Crawls ROC's news section in every language and writes roc-news.json, which
+// the site reads at build time. See web/src/lib/content.js for why the
+// editorial content is files rather than database rows.
 //
-//   node src/scrape-news.js --dry-run --out news.json
-//   node src/scrape-news.js                      (upserts, needs the service key)
+//   node src/scrape-news.js --out roc-news.json
 //
 // Each language is walked independently: ROC has not translated every article,
 // so a language simply yields fewer of them rather than failing.
 
 import { writeFile } from 'node:fs/promises';
-import { createClient } from '@supabase/supabase-js';
 import { Fetcher } from './fetcher.js';
 import { NEWS_PATHS, excerptFrom, parseArticle, parseNewsIndex } from './news.js';
 import { absoluteUrl } from './site.js';
@@ -101,42 +101,26 @@ async function main() {
   }
 
   const results = [...articles.values()].sort((a, b) => b.external_id - a.external_id);
-  logger.log(`\n${results.length} articles, ${results.reduce((n, a) => n + a.translations.length, 0)} translations`);
 
-  if (args.dryRun) {
-    await writeFile(args.out, JSON.stringify(results, null, 2));
-    logger.log(`wrote ${args.out}`);
-    return;
-  }
-
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) throw new Error('SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required (or pass --dry-run)');
-  const supabase = createClient(url, key, { auth: { persistSession: false } });
-
-  const seen = [];
+  // ROC serves the Catalan title and no body for articles it has not actually
+  // translated, which would otherwise be stored as a Spanish or French
+  // version of the piece. Drop those so the site falls back honestly.
+  let dropped = 0;
   for (const a of results) {
-    const { translations, ...row } = a;
-    const { data, error } = await supabase
-      .from('news_articles')
-      .upsert({ ...row, is_active: true, delisted_at: null, last_seen_at: new Date().toISOString() },
-              { onConflict: 'external_id' })
-      .select('id')
-      .single();
-    if (error) { logger.warn(`#${a.external_id}: ${error.message}`); continue; }
-    seen.push(a.external_id);
-    const { error: tErr } = await supabase
-      .from('news_translations')
-      .upsert(translations.map((t) => ({ ...t, article_id: data.id })), { onConflict: 'article_id,lang' });
-    if (tErr) logger.warn(`#${a.external_id} translations: ${tErr.message}`);
+    const ca = a.translations.find((t) => t.lang === 'ca');
+    a.translations = a.translations.filter((t) => {
+      if (t.lang === 'ca') return true;
+      const untranslated = !t.body_html && ca && t.title === ca.title;
+      if (untranslated) dropped += 1;
+      return !untranslated;
+    });
   }
 
-  if (seen.length) {
-    await supabase.from('news_articles')
-      .update({ is_active: false, delisted_at: new Date().toISOString() })
-      .not('external_id', 'in', `(${seen.join(',')})`);
-  }
-  logger.log(`upserted ${seen.length} articles`);
+  const total = results.reduce((n, a) => n + a.translations.length, 0);
+  logger.log(`\n${results.length} articles, ${total} translations (${dropped} untranslated dropped)`);
+
+  await writeFile(args.out, JSON.stringify(results, null, 2));
+  logger.log(`wrote ${args.out}`);
 }
 
 main().catch((err) => { console.error(err); process.exit(1); });
