@@ -28,6 +28,9 @@ rocpropietats.com ──scraper──▶ Supabase ──▶ JSON API  (/api/prop
 | `netlify/functions/` | Netlify | Public read-only JSON API |
 | `web/` | Netlify | Astro site, statically built from Supabase |
 | `docs/` | — | The original design export, its markup and assets |
+| `scraper/roc-news.json` | repo | 29 news articles, four languages |
+| `scraper/roc-pages.json` | repo | About and the three legal notices |
+| `scraper/roc-parishes.json` | repo | Parish profiles, written for us |
 
 ## Getting set up
 
@@ -158,6 +161,42 @@ The design came from a Claude Design export. `docs/design-source.html` is the
 extracted source, `docs/design-markup.html` the markup alone, and
 `docs/design-assets/` the fonts and logos; `web/src/styles/` holds the design
 system's own CSS, unchanged apart from rewriting font URLs.
+
+## Where each kind of content lives
+
+The listings are in Supabase. They earn it: 76 of them, filtered on the site,
+served as a JSON API, and re-checked nightly so a sold property drops out.
+
+The editorial content — news, the about and legal pages, the parish profiles —
+is files in `scraper/`. It is 29 articles in four years, four standing pages
+and seven profiles, all static once written, with no filtering, no API and no
+delisting. As files they are versioned and diffable, the build needs no round
+trip for them, and the scheduled crawl commits a change rather than writing to
+a table nothing else reads.
+
+Two things about ROC's news worth knowing. Every article's byline and date are
+the theme's placeholders — "Ali Tufan", January 2020, on all of them — so the
+real date comes from the URL. And for articles ROC has not actually
+translated, their Spanish and French pages serve the Catalan title with no
+body; stored as-is those would claim to be translations, so they are dropped
+and the page falls back honestly instead.
+
+Article bodies are third-party HTML that ends up on our pages, so they are
+reduced to a tag allowlist at ingest (`scraper/src/news.js`): prose tags only,
+and the single attribute kept is `href` on a link, which must be http(s).
+
+## The parish profiles
+
+`scraper/roc-parishes.json` holds a short profile of each of the seven
+parishes — an intro line, three paragraphs and three highlights — in all four
+languages, written for this site rather than scraped. They drive the accordion
+on the home page and a page per parish at `/locations/<slug>/`, which lists
+that parish's properties alongside the writing.
+
+They replaced one-line notes that referred to the **Vallnord** ski brand,
+which has been retired: Pal Arinsal folded into Grandvalira Resorts and Ordino
+Arcalís before it. The profiles name the resorts themselves. Worth a check
+against the operators' current naming before any print use.
 
 ## Data source
 
