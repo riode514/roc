@@ -63,14 +63,16 @@ export function parseDetailPage(html, { lang, transaction, reference, url }) {
   let sublocation = null;
   const altText = clean($('.lightgallery img').first().attr('alt') || '');
   const altParts = altText.split('|').map(clean).filter(Boolean);
+  // The alt is generated from the property record, so it wins over the
+  // heading, which is matched loosely and can pick up surrounding markup.
   if (altParts.length >= 3) {
     propertyType = altParts[1];
     const place = altParts[2].split(',').map(clean).filter(Boolean);
     if (place.length >= 2) {
       sublocation = place[0];
-      parish = place[place.length - 1] || parish;
+      parish = place[place.length - 1];
     } else if (place.length === 1) {
-      parish = parish || place[0];
+      parish = place[0];
     }
   }
   if (!propertyType) {
