@@ -1,0 +1,16 @@
+{
+  "name": "roc-propietats-scraper",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Ingests rocpropietats.com listings into Supabase.",
+  "scripts": {
+    "scrape": "node src/index.js",
+    "scrape:dry": "node src/index.js --dry-run"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "@supabase/supabase-js": "2.48.1",
+    "cheerio": "1.0.0"
+  }
+}

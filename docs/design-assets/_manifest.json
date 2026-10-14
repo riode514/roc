@@ -1,0 +1,57 @@
+{
+ "0fb38e83-b8f6-4282-8dac-5e0621a0d383": {
+  "file": "0fb38e83-b8f6-4282-8dac-5e0621a0d383.png",
+  "mime": "image/png",
+  "bytes": 23614
+ },
+ "4d394442-fcd2-43fa-a418-58af20cc4bad": {
+  "file": "4d394442-fcd2-43fa-a418-58af20cc4bad.png",
+  "mime": "image/png",
+  "bytes": 54582
+ },
+ "12755e87-74f9-485a-99db-7d884fd50578": {
+  "file": "12755e87-74f9-485a-99db-7d884fd50578.js",
+  "mime": "application/javascript",
+  "bytes": 34543
+ },
+ "789642fe-aa64-4208-aed4-b9d9bf8ab061": {
+  "file": "789642fe-aa64-4208-aed4-b9d9bf8ab061.js",
+  "mime": "text/javascript",
+  "bytes": 19109
+ },
+ "b89cc7dd-725c-47de-a2c9-9e41bb2f9a69": {
+  "file": "b89cc7dd-725c-47de-a2c9-9e41bb2f9a69.js",
+  "mime": "text/javascript",
+  "bytes": 21592
+ },
+ "48e4ae3f-c49a-4024-b903-9f32b6e349eb": {
+  "file": "48e4ae3f-c49a-4024-b903-9f32b6e349eb.js",
+  "mime": "text/javascript",
+  "bytes": 4269
+ },
+ "8ec15161-145a-4e2f-b4c0-05fa8bb6755b": {
+  "file": "8ec15161-145a-4e2f-b4c0-05fa8bb6755b.js",
+  "mime": "text/javascript",
+  "bytes": 43121
+ },
+ "d92ec4db-af2d-46ce-807a-e58bac8282ff": {
+  "file": "d92ec4db-af2d-46ce-807a-e58bac8282ff.ttf",
+  "mime": "font/ttf",
+  "bytes": 288756
+ },
+ "ae4e62bc-3eec-44f3-965b-94e8e1118a32": {
+  "file": "ae4e62bc-3eec-44f3-965b-94e8e1118a32.ttf",
+  "mime": "font/ttf",
+  "bytes": 194664
+ },
+ "ba19751a-1e24-46c5-9b64-de60a49c90c2": {
+  "file": "ba19751a-1e24-46c5-9b64-de60a49c90c2.ttf",
+  "mime": "font/ttf",
+  "bytes": 465723
+ },
+ "84655eff-4dcc-449a-a3a6-f049e0060676": {
+  "file": "84655eff-4dcc-449a-a3a6-f049e0060676.ttf",
+  "mime": "font/ttf",
+  "bytes": 505386
+ }
+}

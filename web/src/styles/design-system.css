@@ -1,0 +1,650 @@
+/* ============================================================
+   Barleigh Ellis — Design System root stylesheet
+   Single entry point: consumers link this one file.
+   ============================================================ */
+/* ==========================================================================
+   BARLEIGH ELLIS — Design Tokens (Palette G · Graphite & Stone)
+   Colour + Type foundations. Import this file into any artifact.
+
+   Cormorant Garamond is self-hosted from variable font files (300–700, upright
+   + italic). Inter is self-hosted from variable font files (upright + italic).
+   --------------------------------------------------------------------------
+   GOLDEN RULES
+   · Headings  → Cormorant Garamond, weight 300 ONLY. Never bold.
+   · Body      → Inter, weight 400 (500 for small uppercase labels only).
+   · The "s" in "Ellis" is ALWAYS italic in the wordmark.
+   · No bright colours. No gradients. No shadows. Border-radius max 2px.
+   ========================================================================== */
+
+/* Cormorant Garamond — fully self-hosted, variable weight (300–700, upright + italic).
+   Inter — fully self-hosted, variable weight + optical size (upright + italic). */
+
+:root {
+  /* ---- Brand palette · Palette G ---------------------------------------- */
+  --be-charcoal:    #222420; /* Graphite — primary ink, dark surfaces        */
+  --be-stone:       #8A8A7A; /* Warm Stone — THE accent. Logo dot, rules     */
+  --be-lichen:      #A8A898; /* Lichen — lighter stone, secondary accent     */
+  --be-deep-grey:   #3A3B38; /* Deep grey — hover on charcoal                */
+
+  /* ---- Neutrals / surfaces --------------------------------------------- */
+  --be-bg:          #FAFAF8; /* Off-white page background                    */
+  --be-cream:       #F5F0EB; /* Warm cream — alt section background          */
+  --be-limestone:   #F0EFEC; /* Limestone — tonal panels, icon chips         */
+  --be-warm-white:  #F7F6F4; /* Warm white — cards on tinted bg              */
+  --be-card:        #FFFFFF; /* Pure white card surface                      */
+  --be-border:      #DDDBD6; /* Hairline border (1px)                        */
+  --be-muted:       #8A877F; /* Muted text — captions, meta, descriptions    */
+
+  /* ---- Semantic ink ----------------------------------------------------- */
+  --be-ink:         var(--be-charcoal);   /* default text             */
+  --be-ink-2:       var(--be-muted);      /* secondary text           */
+  --be-ink-invert:  #FFFFFF;              /* text on charcoal         */
+  --be-accent:      var(--be-stone);      /* the one accent           */
+
+  /* ---- Type families (live stack — nothing else; never Gabriela or Graphie) -- */
+  --be-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif; /* @kind font */
+  --be-sans:  'Inter', system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; /* @kind font */
+  --be-mono:  'JetBrains Mono', 'Fira Code', ui-monospace, monospace; /* @kind font */
+
+  /* ---- Weights (do not deviate) ----------------------------------------- */
+  --be-w-display: 300; /* @kind font */ /* all serif headings  */
+  --be-w-body:    400; /* @kind font */ /* body copy           */
+  --be-w-label:   500; /* @kind font */ /* small uppercase labels only */
+
+  /* ---- Type scale ------------------------------------------------------- */
+  --be-text-hero:   56px;  /* page heroes (serif 300)        */
+  --be-text-h1:     42px;
+  --be-text-h2:     32px;
+  --be-text-h3:     24px;
+  --be-text-price:  26px;  /* property prices (serif 300)    */
+  --be-text-lg:     18px;
+  --be-text-body:   15px;
+  --be-text-sm:     13px;
+  --be-text-xs:     11px;
+  --be-text-label:  10.5px; /* uppercase eyebrows / nav      */
+
+  /* ---- Tracking (letter-spacing) ---------------------------------------- */
+  --be-track-logo:   0.18em; /* header wordmark                */
+  --be-track-label:  0.18em; /* eyebrows, buttons, badges      */
+  --be-track-nav:    0.14em; /* nav links                      */
+  --be-track-tight: -0.01em; /* large serif display            */
+
+  /* ---- Spacing scale (8pt-ish, generous) -------------------------------- */
+  --be-s-1: 4px;
+  --be-s-2: 8px;
+  --be-s-3: 16px;
+  --be-s-4: 24px;
+  --be-s-5: 40px;
+  --be-s-6: 60px;
+  --be-s-7: 96px;
+
+  /* ---- Form / shape ----------------------------------------------------- */
+  --be-radius: 2px;        /* the ONLY radius. Often 0.        */
+  --be-hair: 1px solid var(--be-border);
+  /* No shadow tokens by design. Elevation = hairline borders + whitespace. */
+}
+
+/* ==========================================================================
+   SEMANTIC ELEMENT STYLES
+   Opt-in: add class="be" to a container to apply these to its children,
+   or copy individual rules. Keeps host pages from being clobbered.
+   ========================================================================== */
+
+.be {
+  background: var(--be-bg);
+  color: var(--be-ink);
+  font-family: var(--be-sans);
+  font-weight: var(--be-w-body);
+  font-size: var(--be-text-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.be h1, .be h2, .be h3, .be .be-display {
+  font-family: var(--be-serif);
+  font-weight: var(--be-w-display);
+  color: var(--be-ink);
+  margin: 0 0 0.4em;
+}
+.be h1 { font-size: var(--be-text-h1); line-height: 1.1; letter-spacing: var(--be-track-tight); }
+.be h2 { font-size: var(--be-text-h2); line-height: 1.15; }
+.be h3 { font-size: var(--be-text-h3); line-height: 1.25; }
+
+.be p { margin: 0 0 1em; color: var(--be-ink); }
+.be .be-muted { color: var(--be-ink-2); }
+
+/* Uppercase label / eyebrow */
+.be-eyebrow,
+.be-label {
+  font-family: var(--be-sans);
+  font-weight: var(--be-w-label);
+  font-size: var(--be-text-label);
+  letter-spacing: var(--be-track-label);
+  text-transform: uppercase;
+  color: var(--be-muted);
+}
+
+/* Hero serif */
+.be-hero {
+  font-family: var(--be-serif);
+  font-weight: var(--be-w-display);
+  font-size: var(--be-text-hero);
+  line-height: 1.08;
+  letter-spacing: var(--be-track-tight);
+}
+
+/* Price */
+.be-price {
+  font-family: var(--be-serif);
+  font-weight: var(--be-w-display);
+  font-size: var(--be-text-price);
+}
+
+/* ---- Buttons ---------------------------------------------------------- */
+.be-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--be-sans);
+  font-weight: var(--be-w-label);
+  font-size: var(--be-text-label);
+  letter-spacing: var(--be-track-label);
+  text-transform: uppercase;
+  padding: 15px 34px;
+  border: 1px solid var(--be-charcoal);
+  border-radius: var(--be-radius);
+  background: var(--be-charcoal);
+  color: #fff;
+  cursor: pointer;
+  transition: background .25s ease, color .25s ease, border-color .25s ease;
+  text-decoration: none;
+}
+.be-btn:hover { background: var(--be-stone); border-color: var(--be-stone); }
+
+.be-btn--ghost {
+  background: transparent;
+  color: var(--be-charcoal);
+  border-color: var(--be-charcoal);
+}
+.be-btn--ghost:hover { background: var(--be-charcoal); color: #fff; }
+
+.be-btn--light {
+  background: #fff;
+  color: var(--be-charcoal);
+  border-color: #fff;
+}
+.be-btn--light:hover { background: var(--be-lichen); border-color: var(--be-lichen); }
+
+/* ---- Hairline rule (signature short underline) ------------------------ */
+.be-rule {
+  width: 40px;
+  height: 1px;
+  background: var(--be-stone);
+  border: 0;
+}
+
+/* ---- The wordmark ----------------------------------------------------- */
+/* Use <span class="be-wordmark">Barleigh Elli<i>s</i><b>.</b></span> */
+.be-wordmark {
+  font-family: var(--be-serif);
+  font-weight: var(--be-w-display);
+  letter-spacing: var(--be-track-logo);
+  color: var(--be-charcoal);
+  white-space: nowrap;
+}
+.be-wordmark i { font-style: italic; }              /* the "s" in Ellis  */
+.be-wordmark b { font-weight: var(--be-w-display); color: var(--be-stone); } /* stone dot */
+
+/* ==========================================================================
+   BARLEIGH ELLIS · Dossier — Port d'Aiguadolç
+   Premium editorial system (A4 portrait). Builds on colors_and_type.css.
+   Palette extended per brief: blanco · arena · azul marino · gris piedra.
+   ========================================================================== */
+
+:root{
+  --doss-navy:  #1b2a39;   /* azul marino — marine accent (nautical)        */
+  --doss-navy2: #223547;   /* lighter marine                                */
+  --doss-sand:  #e7dfd1;   /* arena                                         */
+  --doss-sand2: #efe9de;
+  --gold:       #b08d57;   /* discreet brass / gold lettering               */
+  --gold-soft:  #c9a978;
+  --ink:        var(--be-charcoal);
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;}
+body{
+  background:#33342f;
+  font-family:var(--be-sans);
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  padding:42px 0 64px;
+}
+
+/* ---- A4 sheet ---- */
+.page{
+  width:210mm;height:297mm;
+  background:#fff;
+  margin:0 auto 30px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 18px 50px rgba(0,0,0,.4);
+  display:flex;flex-direction:column;
+}
+.page__body{flex:1;display:flex;flex-direction:column;min-height:0;}
+
+/* ---- shared type ---- */
+.eyebrow{
+  font-family:var(--be-sans);font-weight:500;font-size:12px;
+  letter-spacing:.34em;text-transform:uppercase;color:var(--be-stone);
+}
+.eyebrow.on-dark{color:var(--be-lichen);}
+.rule{width:46px;height:1px;background:var(--be-stone);border:0;}
+.rule.gold{background:var(--gold);}
+.rule.on-dark{background:rgba(255,255,255,.4);}
+
+.display{
+  font-family:var(--be-serif);font-weight:300;color:var(--ink);
+  letter-spacing:-.01em;line-height:1.06;margin:0;
+}
+.display.xl{font-size:52px;}
+.display.lg{font-size:39px;}
+.display.md{font-size:32px;}
+.display i{font-style:italic;}
+.display.on-dark{color:#f4f1ec;}
+
+.lede{
+  font-family:var(--be-serif);font-weight:300;font-style:italic;
+  font-size:21px;line-height:1.38;color:var(--be-deep-grey);margin:0;
+}
+.lede.on-dark{color:rgba(244,241,236,.9);}
+
+.body{
+  font-family:var(--be-sans);font-weight:400;font-size:14.5px;
+  line-height:1.62;color:#43443f;margin:0 0 .95em;
+}
+.body.on-dark{color:rgba(244,241,236,.74);}
+.body:last-child{margin-bottom:0;}
+
+.kicker{
+  font-family:var(--be-serif);font-weight:300;font-style:italic;
+  font-size:19px;line-height:1.5;color:var(--ink);
+}
+
+.wm{font-family:var(--be-serif);font-weight:300;letter-spacing:.12em;white-space:nowrap;}
+.wm i{font-style:italic;}
+.wm .dot{color:var(--be-stone);}
+.wm.on-dark{color:#f4f1ec;}
+.wm.on-dark .dot{color:var(--gold-soft);}
+
+/* ---- running footer ---- */
+.foot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 22mm 14mm;color:var(--be-muted);
+}
+.foot .wm{font-size:15px;color:var(--be-charcoal);}
+.foot__meta{font-family:var(--be-sans);font-size:10px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--be-stone);}
+.foot__no{font-family:var(--be-serif);font-size:17px;color:var(--be-stone);}
+.foot.on-dark .wm{color:#f4f1ec;}
+.foot.on-dark .foot__meta,.foot.on-dark .foot__no{color:var(--be-lichen);}
+
+/* generous inner padding helper */
+.pad{padding:24mm 22mm;}
+.pad-lg{padding:30mm 24mm;}
+
+/* ============================== COVER ================================== */
+.cover{background:var(--doss-navy);}
+.cover__img{position:absolute;inset:0;}
+.cover__img img{width:100%;height:100%;object-fit:cover;}
+.cover__scrim{position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(16,24,33,.46) 0%,rgba(16,24,33,.12) 32%,rgba(16,24,33,.30) 64%,rgba(13,20,28,.86) 100%);}
+.cover__inner{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;
+  justify-content:space-between;padding:26mm 24mm;color:#fff;}
+.cover__top{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;}
+.cover__crest{font-family:var(--be-serif);font-weight:300;font-size:30px;letter-spacing:.18em;color:#fff;}
+.cover__crest .dot{color:var(--gold-soft);}
+.cover__mid{text-align:center;}
+.cover__title{font-family:var(--be-serif);font-weight:300;font-size:62px;line-height:1;
+  letter-spacing:.02em;color:#fff;margin:0;}
+.cover__sub{font-family:var(--be-sans);font-weight:500;font-size:13px;letter-spacing:.42em;
+  text-transform:uppercase;color:rgba(255,255,255,.82);margin-top:18px;}
+.cover__band{text-align:center;}
+.cover__band .l1{font-family:var(--be-serif);font-style:italic;font-weight:300;font-size:26px;color:#fff;}
+.cover__band .l2{font-family:var(--be-sans);font-weight:500;font-size:11px;letter-spacing:.36em;
+  text-transform:uppercase;color:rgba(255,255,255,.7);margin-top:14px;}
+.cover__assoc{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:20px;}
+.cover__assoc img{height:30px;width:auto;opacity:.95;}
+.cover__assoc .x{font-family:var(--be-sans);font-size:10px;letter-spacing:.3em;text-transform:uppercase;
+  color:rgba(255,255,255,.6);}
+
+/* ============================== FIGURES ================================ */
+.fig{position:relative;overflow:hidden;background:var(--be-limestone);}
+.fig img{width:100%;height:100%;object-fit:cover;display:block;}
+.cap{font-family:var(--be-sans);font-size:11px;letter-spacing:.06em;color:var(--be-muted);
+  margin-top:9px;line-height:1.5;}
+.cap b{font-weight:500;color:var(--be-deep-grey);letter-spacing:.16em;text-transform:uppercase;font-size:10px;}
+
+/* two-column grids */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:0;flex:1;min-height:0;}
+.split--text-img{grid-template-columns:1.05fr .95fr;}
+.gridcols{display:grid;gap:7mm;}
+
+/* stat / list rows */
+.profile{display:flex;flex-direction:column;}
+.profile__row{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:baseline;
+  padding:15px 0;border-top:1px solid var(--be-border);}
+.profile__row:last-child{border-bottom:1px solid var(--be-border);}
+.profile__no{font-family:var(--be-serif);font-size:18px;color:var(--be-stone);font-style:italic;}
+.profile__t{font-family:var(--be-serif);font-weight:300;font-size:23px;color:var(--ink);line-height:1.2;}
+.profile__d{font-family:var(--be-sans);font-size:13.5px;line-height:1.6;color:#5b5c56;margin-top:4px;}
+
+/* ============================== MAP =================================== */
+.map-wrap{flex:1;position:relative;background:var(--doss-navy);overflow:hidden;}
+.map-wrap svg{position:absolute;inset:0;width:100%;height:100%;}
+
+/* ============================== QUOTE ================================= */
+.quote__inner{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;
+  justify-content:flex-end;padding:26mm 24mm;color:#fff;}
+.quote__q{font-family:var(--be-serif);font-weight:300;font-style:italic;font-size:38px;
+  line-height:1.28;color:#fff;max-width:15em;margin:0 0 30mm;}
+
+/* ====================================================================== */
+/*  FACADE — Mediterranean white building + refined British shopfront      */
+/* ====================================================================== */
+.facade{position:relative;width:100%;height:100%;overflow:hidden;
+  background:linear-gradient(#bcd2dd 0%,#cfdde2 100%);}
+/* upper white rendered wall */
+.fc-upper{position:absolute;left:0;right:0;top:0;height:40%;
+  background:linear-gradient(180deg,#f6f3ec,#ece6da);}
+.fc-upper::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(120,108,88,.18);}
+/* roofline shadow */
+.fc-upper::before{content:"";position:absolute;left:0;right:0;top:0;height:10px;
+  background:linear-gradient(rgba(0,0,0,.12),transparent);}
+/* shuttered windows upstairs */
+.fc-win{position:absolute;top:12%;width:13%;height:20%;background:#27435a;
+  border:2px solid #f1ece0;box-shadow:inset 0 0 0 1px rgba(0,0,0,.25);}
+.fc-win .sh{position:absolute;top:0;bottom:0;width:50%;
+  background:repeating-linear-gradient(#26506b 0 3px,#2f5d7a 3px 6px);}
+.fc-win .sh.l{left:0;border-right:1px solid rgba(0,0,0,.2);}
+.fc-win .sh.r{right:0;}
+.fc-balcony{position:absolute;top:32.4%;height:2.0%;
+  background:repeating-linear-gradient(90deg,#2a2c28 0 2px,transparent 2px 9px);
+  border-bottom:2px solid #2a2c28;}
+
+/* awning valance */
+.fc-awn{position:absolute;left:6%;right:6%;top:40%;height:3.6%;background:var(--doss-navy);z-index:4;}
+.fc-awn::after{content:"";position:absolute;left:0;right:0;bottom:-11px;height:12px;
+  background:radial-gradient(circle at 12px -2px, var(--doss-navy) 0 11px, transparent 12px) repeat-x;
+  background-size:24px 12px;}
+
+/* fascia board */
+.fc-fascia{position:absolute;left:6%;right:6%;top:43.6%;height:8.2%;z-index:5;
+  background:linear-gradient(180deg,#21323f,#18242f);
+  border-top:2px solid #2c4150;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:6px;
+  box-shadow:0 6px 14px rgba(0,0,0,.28);}
+.fc-fascia .nm{font-family:var(--be-serif);font-weight:300;font-size:30px;letter-spacing:.16em;color:#f3eee3;line-height:1;}
+.fc-fascia .nm i{font-style:italic;}
+.fc-fascia .nm .dot{color:var(--gold-soft);}
+.fc-fascia .sb{font-family:var(--be-sans);font-weight:500;font-size:8.5px;letter-spacing:.4em;
+  text-transform:uppercase;color:var(--gold-soft);}
+.fc-fascia::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.7;}
+
+/* wall lanterns */
+.fc-lantern{position:absolute;top:45%;width:14px;height:26px;z-index:6;
+  background:linear-gradient(#2a2c28,#3a3b38);border-radius:1px;}
+.fc-lantern::before{content:"";position:absolute;inset:3px;background:var(--gold-soft);opacity:.55;}
+
+/* shopfront glazing */
+.fc-shop{position:absolute;left:6%;right:6%;top:51.8%;bottom:9%;z-index:3;
+  background:var(--doss-navy);padding:9px;display:flex;gap:9px;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,.4);}
+.fc-pane{flex:1;position:relative;overflow:hidden;border:1px solid #0f1820;
+  background:linear-gradient(122deg,rgba(255,255,255,.16) 0 16%,transparent 16% 30%,rgba(255,255,255,.07) 30% 36%,transparent 36%),
+             radial-gradient(120% 70% at 50% 118%, rgba(201,169,120,.28), transparent 60%),
+             linear-gradient(160deg,#3a5566,#1e3340 58%,#15252f);}
+.fc-etch{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;
+  font-family:var(--be-sans);font-weight:500;font-size:8px;letter-spacing:.32em;text-transform:uppercase;
+  color:rgba(231,223,209,.78);line-height:2.1;}
+.fc-door{width:20%;position:relative;border:1px solid #0f1820;
+  background:linear-gradient(160deg,#22384a,#13212b);display:flex;align-items:center;justify-content:center;}
+.fc-door::before{content:"";position:absolute;left:50%;top:10px;bottom:10px;width:1px;background:rgba(255,255,255,.14);}
+.fc-door .handle{position:absolute;left:30%;top:50%;width:4px;height:46px;transform:translateY(-50%);
+  background:linear-gradient(var(--gold-soft),var(--gold));border-radius:2px;}
+.fc-door .transom{position:absolute;left:8px;right:8px;top:8px;height:18%;
+  border:1px solid rgba(255,255,255,.12);
+  display:flex;align-items:center;justify-content:center;}
+.fc-door .transom span{font-family:var(--be-serif);font-style:italic;font-size:9px;color:var(--gold-soft);letter-spacing:.1em;}
+
+/* window display cards */
+.fc-disp{position:absolute;left:0;right:0;top:14%;display:flex;gap:8px;justify-content:center;padding:0 8px;}
+.fc-card{width:46%;background:#fbfaf7;padding:5px 5px 7px;border:1px solid #e7e2d8;
+  box-shadow:0 5px 12px rgba(0,0,0,.45);}
+.fc-card .ph{width:100%;height:60px;background-size:cover;background-position:center;}
+.fc-card .pr{font-family:var(--be-serif);font-size:11px;color:var(--ink);text-align:center;margin-top:4px;}
+.fc-card .mt{font-family:var(--be-sans);font-weight:500;font-size:5.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--be-stone);text-align:center;margin-top:2px;}
+
+/* stallriser */
+.fc-stall{position:absolute;left:6%;right:6%;bottom:5.2%;height:3.8%;z-index:4;
+  background:linear-gradient(#1a2832,#13202a);border-top:2px solid #28404f;}
+
+/* pavement */
+.fc-pave{position:absolute;left:0;right:0;bottom:0;height:5.2%;z-index:2;
+  background:linear-gradient(#cabfaf,#b9ab93);}
+.fc-pave::before{content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,transparent 0 64px,rgba(90,80,60,.18) 64px 65px);}
+
+/* planters w/ topiary */
+.fc-planter{position:absolute;bottom:5.2%;width:50px;height:62px;z-index:7;}
+.fc-planter .pot{position:absolute;bottom:0;left:5px;right:5px;height:26px;
+  background:linear-gradient(#e9e3d6,#cfc6b3);border:1px solid #bcb29c;}
+.fc-planter .top{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
+  width:40px;height:44px;border-radius:50% 50% 46% 46%;
+  background:radial-gradient(circle at 38% 32%,#5d7050,#3f4f37 70%);}
+.fc-planter .top::after{content:"";position:absolute;left:50%;bottom:-2px;width:5px;height:14px;
+  transform:translateX(-50%);background:#6b5a3f;}
+
+/* blade / hanging sign */
+.fc-blade{position:absolute;top:52%;z-index:8;display:flex;flex-direction:column;align-items:center;}
+.fc-blade .arm{width:2px;height:14px;background:#2a2c28;}
+.fc-blade .panel{width:128px;min-height:104px;padding:15px 12px;text-align:center;
+  background:linear-gradient(180deg,#1d2d3c,#162430);
+  border:1px solid var(--gold);box-shadow:0 12px 24px rgba(0,0,0,.45);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;}
+.fc-blade .panel .cb-be{font-family:var(--be-serif);font-style:italic;font-weight:300;
+  font-size:19px;color:#f3eee3;line-height:1;letter-spacing:.02em;}
+.fc-blade .panel .cb-be .dot{color:var(--gold-soft);}
+.fc-blade .panel .cb-hr{width:38px;height:1px;background:var(--gold);opacity:.7;}
+.fc-blade .panel .cb-assoc{font-family:var(--be-sans);font-weight:500;font-size:5.5px;
+  letter-spacing:.3em;text-transform:uppercase;color:var(--gold-soft);}
+.fc-blade .panel .cb-hamp{height:11px;width:auto;opacity:.95;}
+
+/* facade caption chips below the illustration page */
+.fc-notes{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--be-border);}
+.fc-note{padding:16px 16px 0;border-right:1px solid var(--be-border);}
+.fc-note:last-child{border-right:0;}
+.fc-note .h{font-family:var(--be-sans);font-weight:500;font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--be-stone);margin-bottom:6px;}
+.fc-note .p{font-family:var(--be-sans);font-size:12.5px;line-height:1.55;color:#54554f;}
+
+/* concept room icons row */
+.concept{display:grid;grid-template-columns:repeat(2,1fr);gap:0;}
+.concept__cell{padding:20px 22px;border-top:1px solid var(--be-border);border-right:1px solid var(--be-border);
+  display:flex;gap:14px;align-items:flex-start;}
+.concept__cell:nth-child(2n){border-right:0;}
+.concept__ic{flex:none;width:34px;height:34px;color:var(--be-stone);}
+.concept__ic svg{width:100%;height:100%;}
+.concept__t{font-family:var(--be-serif);font-weight:300;font-size:19px;color:var(--ink);line-height:1.2;}
+.concept__d{font-family:var(--be-sans);font-size:12.5px;line-height:1.55;color:#5b5c56;margin-top:3px;}
+
+/* ============================== PRINT ================================= */
+@page{ size:A4 portrait; margin:0; }
+@media print{
+  body{background:#fff;padding:0;}
+  .page{margin:0;box-shadow:none;break-after:page;page-break-after:always;}
+  .page:last-of-type{break-after:auto;}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+
+/* ==========================================================================
+   BARLEIGH ELLIS · Co-brand signage system
+   Lockups + shopfront applications. Builds on colors_and_type.css tokens.
+   Partner brands keep their native equity; BE leads. Navy panels are tuned
+   to each partner's native logo background so raster marks sit seamlessly.
+   ========================================================================== */
+
+:root{
+  --ham-navy:   #002b59;  /* Hamptons (white mark) native ground */
+  --ham-ink:    #0a2342;  /* Hamptons modern lockup navy */
+  --ham-coral:  #ef7c6f;  /* Hamptons accent */
+  --js-navy:    #0e1433;  /* Jackson-Stops native ground */
+  --js-red:     #c0392b;  /* Jackson-Stops griffin red */
+}
+
+*{box-sizing:border-box;}
+
+/* ---------- Barleigh Ellis wordmark (live type) ---------- */
+.cb-wm{
+  font-family:var(--be-serif);font-weight:300;
+  letter-spacing:.15em;color:var(--be-charcoal);
+  white-space:nowrap;line-height:.9;display:inline-block;
+}
+.cb-wm i{font-style:italic;}
+.cb-wm .dot{color:var(--be-stone);}
+.cb-wm.on-dark{color:#f4f1ec;}
+.cb-wm.on-dark .dot{color:var(--be-lichen);}
+
+.cb-sub{
+  font-family:var(--be-sans);font-weight:500;
+  text-transform:uppercase;color:var(--be-stone);
+  letter-spacing:.42em;line-height:1;
+}
+.cb-sub.on-dark{color:rgba(244,241,236,.62);}
+
+/* ---------- Lockup frame ---------- */
+.cb-lockup{
+  width:100%;height:100%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:0;
+  padding:46px 54px;position:relative;
+}
+.cb-lockup.light{background:var(--be-cream);}
+.cb-lockup.paper{background:var(--be-bg);}
+.cb-lockup.ham{background:var(--ham-navy);}
+.cb-lockup.js{background:var(--js-navy);}
+
+.cb-eyebrow{
+  font-family:var(--be-sans);font-weight:500;font-size:10px;
+  letter-spacing:.34em;text-transform:uppercase;
+  color:var(--be-stone);margin-bottom:30px;
+}
+.cb-lockup.ham .cb-eyebrow,
+.cb-lockup.js  .cb-eyebrow{color:rgba(244,241,236,.5);}
+
+/* row lockup: BE | divider | partner */
+.cb-row{display:flex;align-items:center;justify-content:center;gap:0;}
+.cb-be{display:flex;flex-direction:column;align-items:center;gap:14px;padding:0 44px;}
+.cb-part{display:flex;align-items:center;justify-content:center;padding:0 44px;}
+.cb-div{width:1px;align-self:stretch;background:var(--be-border);}
+.cb-lockup.ham .cb-div,
+.cb-lockup.js  .cb-div{background:rgba(244,241,236,.22);}
+
+/* stacked lockup */
+.cb-stack{display:flex;flex-direction:column;align-items:center;gap:26px;}
+.cb-hr{width:46px;height:1px;background:var(--be-stone);border:0;}
+.cb-lockup.ham .cb-hr,.cb-lockup.js .cb-hr{background:rgba(244,241,236,.3);}
+
+/* partner marks */
+.cb-ham-lockup{height:60px;width:auto;display:block;}
+.cb-ham-white{height:54px;width:auto;display:block;}
+.cb-js-mark{height:116px;width:auto;display:block;}
+
+/* ==========================================================================
+   SHOPFRONT
+   ========================================================================== */
+.cb-shop{width:100%;height:100%;position:relative;overflow:hidden;background:#d9d4cb;}
+.cb-sky{position:absolute;inset:0 0 auto 0;height:56px;
+  background:linear-gradient(#cfd6da,#dfe2df);}
+.cb-facade{position:absolute;inset:44px 0 0 0;
+  background:
+    linear-gradient(180deg,#efeae1,#e4ded3 78%,#ddd6ca);
+  border-top:3px solid #cfc8bb;}
+/* faint ashlar lines */
+.cb-facade::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    repeating-linear-gradient(180deg,transparent 0 62px,rgba(120,110,95,.07) 62px 63px);}
+
+/* fascia sign band */
+.cb-fascia{position:absolute;left:36px;right:36px;top:70px;height:108px;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(0,0,0,.25);}
+.cb-fascia.ham{background:var(--ham-navy);}
+.cb-fascia.js{background:var(--js-navy);}
+.cb-fascia::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:6px;
+  background:linear-gradient(#b7ad9b,#8f8675);} /* brass under-rail */
+.cb-fascia-inner{display:flex;align-items:center;gap:0;transform:scale(.82);}
+
+/* glazing */
+.cb-glaze{position:absolute;left:36px;right:36px;top:200px;bottom:104px;
+  display:flex;gap:14px;padding:14px;background:#2a2c28;
+  border:1px solid #1b1c19;}
+.cb-pane{flex:1;position:relative;overflow:hidden;
+  background:
+    linear-gradient(118deg,rgba(255,255,255,.18) 0 18%,transparent 18% 34%,rgba(255,255,255,.08) 34% 40%,transparent 40%),
+    linear-gradient(160deg,#26424f,#16252c 60%,#0f1a1f);
+  border:1px solid #11120f;}
+.cb-door{width:108px;position:relative;overflow:hidden;
+  background:linear-gradient(160deg,#1d3640,#101b20);
+  border:1px solid #11120f;display:flex;align-items:flex-end;justify-content:center;}
+.cb-door::before{content:"";position:absolute;left:50%;top:14px;width:1px;bottom:14px;
+  background:rgba(255,255,255,.12);}
+.cb-handle{position:absolute;top:50%;left:18px;width:5px;height:54px;border-radius:3px;
+  background:linear-gradient(#cdbf9f,#9a8f73);transform:translateY(-50%);}
+
+/* window property displays */
+.cb-displays{position:absolute;left:18px;right:18px;top:20px;
+  display:flex;gap:12px;justify-content:center;}
+.cb-card{width:104px;background:#fbfaf7;padding:7px 7px 9px;
+  border:1px solid #e7e2d8;box-shadow:0 6px 14px rgba(0,0,0,.35);}
+.cb-card .ph{width:100%;height:74px;background-size:cover;background-position:center;}
+.cb-card .pr{font-family:var(--be-serif);font-weight:300;font-size:13px;
+  color:var(--be-charcoal);margin-top:6px;text-align:center;letter-spacing:.02em;}
+.cb-card .mt{font-family:var(--be-sans);font-weight:500;font-size:6.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--be-stone);
+  text-align:center;margin-top:3px;}
+
+/* stallriser */
+.cb-stall{position:absolute;left:36px;right:36px;bottom:62px;height:42px;}
+.cb-stall.ham{background:var(--ham-navy);}
+.cb-stall.js{background:var(--js-navy);}
+.cb-stall::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:rgba(0,0,0,.3);}
+
+/* pavement */
+.cb-pave{position:absolute;left:0;right:0;bottom:0;height:62px;
+  background:linear-gradient(#c7c2b8,#bcb6ab);
+  border-top:1px solid #a8a194;}
+.cb-pave::before{content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,transparent 0 86px,rgba(90,84,74,.18) 86px 87px);}
+
+/* projecting blade sign */
+.cb-blade-wrap{position:absolute;left:36px;top:196px;z-index:5;display:flex;align-items:flex-start;}
+.cb-bracket{width:26px;height:7px;background:#3a3b38;margin-top:30px;}
+.cb-blade{width:128px;padding:18px 10px;text-align:center;
+  border:2px solid rgba(255,255,255,.16);box-shadow:0 14px 26px rgba(0,0,0,.4);}
+.cb-blade.ham{background:var(--ham-navy);}
+.cb-blade.js{background:var(--js-navy);}
+.cb-blade .bwm{font-family:var(--be-serif);font-weight:300;font-size:23px;
+  letter-spacing:.06em;color:#f4f1ec;line-height:1;}
+.cb-blade .bwm i{font-style:italic;}
+.cb-blade .bwm .dot{color:var(--be-lichen);}
+.cb-blade .bx{font-family:var(--be-sans);font-weight:500;font-size:8px;
+  letter-spacing:.3em;color:rgba(244,241,236,.55);margin:9px 0;text-transform:uppercase;}
+.cb-blade .bp{height:64px;width:auto;display:block;margin:0 auto;}
+.cb-blade .bp.ham{height:32px;}
+
+/* caption strip under artboards */
+.cb-cap{font-family:var(--be-sans);font-size:11px;color:var(--be-muted);
+  letter-spacing:.02em;line-height:1.5;}

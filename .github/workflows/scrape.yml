@@ -1,0 +1,56 @@
+name: Refresh property feed
+
+# The source site asks for a 33-second crawl delay in robots.txt, which the
+# scraper honours. A full pass over ~76 listings in two languages therefore
+# takes well over an hour — too long for a serverless function, which is why
+# this runs here rather than on Netlify.
+
+on:
+  schedule:
+    - cron: '20 3 * * *' # 03:20 UTC daily, before Andorran office hours
+  workflow_dispatch:
+    inputs:
+      crawl_delay_ms:
+        description: 'Delay between requests in ms (default 33000)'
+        required: false
+        default: '33000'
+      languages:
+        description: 'Comma-separated languages to ingest'
+        required: false
+        default: 'ca,en'
+
+concurrency:
+  group: roc-scrape
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: scraper/package.json
+
+      - name: Install scraper dependencies
+        working-directory: scraper
+        run: npm install --no-audit --no-fund
+
+      - name: Crawl and upsert
+        working-directory: scraper
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          ROC_CRAWL_DELAY_MS: ${{ github.event.inputs.crawl_delay_ms || '33000' }}
+          ROC_LANGS: ${{ github.event.inputs.languages || 'ca,en' }}
+        run: node src/index.js
+
+      - name: Rebuild the site with fresh data
+        if: success() && env.NETLIFY_BUILD_HOOK != ''
+        env:
+          NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+        run: curl -fsS -X POST -d '{}' "$NETLIFY_BUILD_HOOK"

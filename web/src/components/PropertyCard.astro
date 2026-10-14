@@ -1,0 +1,43 @@
+---
+import { formatPrice, formatStats, statusLabel, titleOf } from '../lib/properties.js';
+
+const { property, lang = 'en' } = Astro.props;
+const base = lang === 'ca' ? '/ca' : '';
+const href = `${base}/residences/${property.slug}/`;
+const title = titleOf(property, lang);
+const hasMedia = property.videos.length > 0 || property.tours.length > 0;
+---
+<article class="roc-card" data-parish={property.parish ?? ''} data-transaction={property.transaction}
+         data-type={property.t(lang).property_type ?? ''} data-price={property.price ?? 0}
+         style="background:#fff;border:1px solid #DDDBD6;">
+  <a href={href} style="display:block;">
+    <div style="position:relative;aspect-ratio:4/3;background:#F0EFEC;overflow:hidden;">
+      {property.cover
+        ? <img class="roc-card-img" src={property.cover} alt={title} loading="lazy" decoding="async"
+               style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" />
+        : <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#8A877F;font-size:12px;">—</span>}
+      <span style="position:absolute;top:16px;left:16px;background:#fff;color:#13294B;font-size:9.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:6px 10px;border-radius:2px;pointer-events:none;">
+        {statusLabel(property, lang)}
+      </span>
+      {hasMedia && (
+        <span style="position:absolute;top:16px;right:16px;background:rgba(19,41,75,.82);color:#fff;font-size:9px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:6px 10px;border-radius:2px;">
+          {property.tours.length ? '360°' : (lang === 'ca' ? 'Vídeo' : 'Video')}
+        </span>
+      )}
+    </div>
+    <div style="padding:26px 26px 24px;">
+      <div style="font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A8A7A;margin-bottom:8px;">
+        {property.parish ?? ''}
+      </div>
+      <h3 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;font-size:25px;line-height:1.2;margin:0 0 18px;">
+        {title}
+      </h3>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;padding-top:18px;border-top:1px solid #DDDBD6;">
+        <span style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;font-size:25px;white-space:nowrap;">
+          {formatPrice(property, lang)}
+        </span>
+        <span style="font-size:12.5px;color:#8A877F;text-align:right;">{formatStats(property, lang)}</span>
+      </div>
+    </div>
+  </a>
+</article>

@@ -1,0 +1,424 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from './SiteHeader.astro';
+import SiteFooter from './SiteFooter.astro';
+import PropertyCard from './PropertyCard.astro';
+import { PARISHES, PARISH_NOTES, getProperties, typeOf } from '../lib/properties.js';
+
+const { lang = 'en' } = Astro.props;
+const base = lang === 'ca' ? '/ca' : '';
+
+const all = await getProperties();
+// The portfolio strip shows the most substantial listings first.
+const featured = all.filter((p) => p.cover).slice(0, 6);
+const hero = all.find((p) => p.images.length >= 3) ?? all[0];
+const heroImage = hero?.images?.[0]?.url ?? null;
+const associationImage = all.find((p) => p !== hero && p.images.length > 2)?.images?.[1]?.url ?? null;
+
+const parishCounts = Object.fromEntries(
+  PARISHES.map((name) => [name, all.filter((p) => p.parish === name).length]),
+);
+const activeParishes = PARISHES.filter((p) => parishCounts[p] > 0);
+const parishImages = Object.fromEntries(
+  activeParishes.map((name) => [name, all.find((p) => p.parish === name && p.cover)?.cover ?? null]),
+);
+
+const types = [...new Set(all.map((p) => typeOf(p, lang)).filter(Boolean))].sort();
+const filterParishes = activeParishes.filter((p) => parishCounts[p] >= 1);
+
+const c = lang === 'ca' ? {
+  strip: 'ROC Propietats en associació amb Hamptons International',
+  eyebrow: 'Residències de prestigi · Principat d’Andorra',
+  heroTitle: 'Viure a la muntanya, amb criteri',
+  heroLead: 'Habitatges excepcionals a les set parròquies d’Andorra, presentats amb l’abast d’una xarxa internacional i la discreció d’una oficina privada.',
+  viewResidences: 'Veure residències', association: 'L’associació →',
+  inAssociation: 'En associació amb',
+  buy: 'Comprar', rent: 'Llogar', parish: 'Parròquia', allParishes: 'Totes les parròquies',
+  type: 'Tipus', allTypes: 'Tots els tipus', price: 'Preu', anyPrice: 'Qualsevol preu', search: 'Cercar',
+  introEyebrow: 'Oficina privada · Andorra',
+  introTitle: 'Un país petit, conegut a fons. Una xarxa de compradors que va molt més enllà.',
+  introP1: 'ROC Propietats representa una selecció de residències arreu del Principat — des de xalets contemporanis sobre Escaldes fins a bordes de pedra restaurades a la vall d’Ordino. Cada propietat es visita, s’entén i es presenta com mereix.',
+  introP2: 'La nostra associació amb Hamptons International situa els habitatges andorrans davant d’un públic consolidat de compradors del Regne Unit i més enllà, mentre cada conversa continua sent personal, local i confidencial.',
+  approach: 'El nostre enfocament →',
+  selected: 'Residències seleccionades', portfolio: 'Cartera actual', all: 'Totes',
+  viewAll: 'Veure totes les residències',
+  assocLabel: 'L’associació',
+  assocTitle: 'Habitatges andorrans, presentats a un públic internacional',
+  assocLead: 'Per als venedors, l’associació significa exposició a compradors qualificats que ja estan considerant un canvi — molts atrets per la qualitat de vida, la seguretat i el marc de residència del Principat. Per als compradors que arriben de fora, significa un estàndard de servei familiar des de la primera consulta fins a la signatura.',
+  pillars: [['Abast internacional', 'Propietats presentades al públic comprador de Hamptons International.'],
+            ['Coneixement local', 'Coneixement parròquia a parròquia del valor, l’urbanisme i la comunitat.'],
+            ['Un sol estàndard', 'Un servei considerat i coherent, de la consulta a la signatura.']],
+  sevenParishes: 'Les set parròquies', whereToLive: 'On viure a Andorra',
+  properties: 'propietats', property: 'propietat',
+  advisory: 'Assessorament', advisoryTitle: 'Un servei complet i discret',
+  services: [['01', 'Vendes', 'Una venda acuradament presentada, comercialitzada localment i al públic de compradors qualificats de Hamptons International.'],
+             ['02', 'Lloguers', 'Residències de lloguer de llarga durada per a professionals i famílies que es traslladen al Principat, gestionades amb cura.'],
+             ['03', 'Valoració', 'Valoracions considerades i basades en dades que reflecteixen les condicions reals del mercat. Clares, honestes i sempre confidencials.'],
+             ['04', 'Residència', 'Presentacions a assessors legals i fiscals de confiança per a la residència activa i passiva a Andorra.']],
+  quote: '“Ens traslladàvem des de Londres amb molt poc temps. ROC entenia el Principat, ens entenia a nosaltres, i va trobar una casa a La Massana que mai no hauríem descobert sols.”',
+  quoteAttr: 'Client privat · Traslladat el 2025',
+  contactLabel: 'Valoracions i consultes', contactTitle: 'Comença una conversa privada',
+  contactLead: 'Tant si considera una venda, busca una llar o explora la residència, respondrem personalment en un dia laborable. Cada consulta es tracta amb confidencialitat.',
+  intents: ['Vendre', 'Comprar', 'Llogar'],
+  fName: 'Nom complet', fEmail: 'Adreça electrònica', fPhone: 'Telèfon', fParish: 'Parròquia d’interès',
+  fMessage: 'Expliqui’ns una mica què està buscant',
+  gdpr: 'Les seves dades es tracten d’acord amb la llei andorrana de protecció de dades.',
+  send: 'Enviar consulta',
+} : {
+  strip: 'ROC Propietats in association with Hamptons International',
+  eyebrow: 'Prime Residences · Principat d’Andorra',
+  heroTitle: 'Mountain Living, Considered',
+  heroLead: 'Exceptional homes across the seven parishes of Andorra, presented with the reach of an international network and the discretion of a private office.',
+  viewResidences: 'View Residences', association: 'The Association →',
+  inAssociation: 'In association with',
+  buy: 'Buy', rent: 'Rent', parish: 'Parish', allParishes: 'All parishes',
+  type: 'Property type', allTypes: 'All types', price: 'Price', anyPrice: 'Any price', search: 'Search',
+  introEyebrow: 'Private Office · Andorra',
+  introTitle: 'A small country, known intimately. A buyer network that reaches far beyond it.',
+  introP1: 'ROC Propietats represents a select portfolio of residences across the Principality — from contemporary chalets above Escaldes to restored stone bordas in the valley of Ordino. Every property is visited, understood and presented as it deserves.',
+  introP2: 'Our association with Hamptons International places Andorran homes before an established audience of buyers in the United Kingdom and beyond, while every conversation remains personal, local and confidential.',
+  approach: 'Our Approach →',
+  selected: 'Selected Residences', portfolio: 'Current Portfolio', all: 'All',
+  viewAll: 'View All Residences',
+  assocLabel: 'The Association',
+  assocTitle: 'Andorran homes, presented to an international audience',
+  assocLead: 'For sellers, the association means exposure to qualified buyers who are already considering a move — many drawn by the Principality’s quality of life, security and residency framework. For buyers relocating from abroad, it means a familiar standard of service from first enquiry to completion.',
+  pillars: [['International Reach', 'Listings presented to the Hamptons International buyer audience.'],
+            ['Local Expertise', 'Parish-by-parish knowledge of value, planning and community.'],
+            ['One Standard', 'A considered, consistent service from enquiry to completion.']],
+  sevenParishes: 'The Seven Parishes', whereToLive: 'Where to Live in Andorra',
+  properties: 'properties', property: 'property',
+  advisory: 'Advisory', advisoryTitle: 'A Complete, Discreet Service',
+  services: [['01', 'Sales', 'A carefully presented sale, marketed locally and to Hamptons International’s audience of qualified buyers.'],
+             ['02', 'Lettings', 'Long-let residences for professionals and families relocating to the Principality, managed with care.'],
+             ['03', 'Valuation', 'Considered, data-led valuations that reflect true market conditions. Clear, honest, and always confidential.'],
+             ['04', 'Residency Advisory', 'Introductions to trusted legal and fiscal advisers for active and passive residency in Andorra.']],
+  quote: '“We were relocating from London with very little time. ROC understood the Principality, understood us, and found a home in La Massana we would never have discovered alone.”',
+  quoteAttr: 'Private client · Relocated 2025',
+  contactLabel: 'Valuation & Enquiries', contactTitle: 'Begin a Private Conversation',
+  contactLead: 'Whether you are considering a sale, searching for a home or exploring residency, we will respond personally within one working day. Every enquiry is treated in confidence.',
+  intents: ['Selling', 'Buying', 'Letting'],
+  fName: 'Full name', fEmail: 'Email address', fPhone: 'Telephone', fParish: 'Parish of interest',
+  fMessage: 'Tell us a little about what you are looking for',
+  gdpr: 'Your details are held in accordance with Andorran data-protection law.',
+  send: 'Send Enquiry',
+};
+
+const title = lang === 'ca'
+  ? 'ROC Propietats · Residències de prestigi a Andorra'
+  : 'ROC Propietats · Prime residences in Andorra';
+---
+<Base title={title} description={c.heroLead} lang={lang} image={heroImage}>
+
+  <!-- TOP STRIP -->
+  <div data-screen-label="Top strip" style="background:#13294B;color:rgba(255,255,255,.72);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;">
+    <div style="max-width:1400px;margin:0 auto;padding:10px 40px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
+      <span>{c.strip}</span>
+      <div style="display:flex;gap:18px;">
+        <a href="/" style={`color:${lang === 'en' ? '#fff' : 'rgba(255,255,255,.55)'};`}>EN</a>
+        <a href="/ca/" style={`color:${lang === 'ca' ? '#fff' : 'rgba(255,255,255,.55)'};`}>CA</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section data-screen-label="Hero" style="position:relative;display:flex;flex-direction:column;min-height:min(92vh,880px);color:#fff;overflow:hidden;background:#13294B;">
+    {heroImage && (
+      <div style="position:absolute;inset:0;">
+        <img src={heroImage} alt="" fetchpriority="high" decoding="async"
+             style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" />
+      </div>
+    )}
+    <!-- The design assumed a dark golden-hour photograph. Real listing images
+         vary a lot, so the scrim is heavier at both ends to keep the header and
+         the headline legible whatever the hero image turns out to be. -->
+    <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(19,41,75,.72) 0%,rgba(19,41,75,.32) 26%,rgba(19,41,75,.28) 42%,rgba(19,41,75,.82) 100%);"></div>
+
+    <SiteHeader tone="light" lang={lang} />
+
+    <div style="position:relative;margin-top:auto;z-index:2;pointer-events:none;width:100%;">
+      <div style="max-width:1400px;margin:0 auto;padding:120px 40px 72px;display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap;">
+        <div style="max-width:720px;pointer-events:auto;">
+          <div style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.8);margin-bottom:22px;display:flex;align-items:center;gap:16px;">
+            <span style="width:40px;height:1px;background:#A8A898;"></span>{c.eyebrow}
+          </div>
+          <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:clamp(46px,6.4vw,92px);line-height:1.02;letter-spacing:-.01em;margin:0 0 24px;text-wrap:balance;">{c.heroTitle}</h1>
+          <p style="font-size:17px;line-height:1.65;color:rgba(255,255,255,.86);max-width:520px;margin:0 0 34px;text-wrap:pretty;">{c.heroLead}</p>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;">
+            <a href="#residences" class="roc-btn-solid" style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:15px 34px;background:#fff;color:#13294B;border-radius:2px;transition:background .25s ease;">{c.viewResidences}</a>
+            <a href="#association" class="roc-btn-light" style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:15px 34px;border:1px solid rgba(255,255,255,.7);color:#fff;border-radius:2px;transition:all .25s ease;">{c.association}</a>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:22px;padding-bottom:6px;pointer-events:auto;">
+          <span style="font-size:9px;font-weight:500;letter-spacing:.34em;text-transform:uppercase;color:rgba(255,255,255,.7);">{c.inAssociation}</span>
+          <span style="width:1px;height:38px;background:rgba(255,255,255,.3);"></span>
+          <span style="display:flex;flex-direction:column;align-items:center;gap:5px;">
+            <img src="/brand/hamptons-wordmark.png" alt="Hamptons International" style="height:30px;width:auto;display:block;" />
+            <span style="font-size:9px;font-weight:600;letter-spacing:.32em;line-height:1;color:#FF5D5C;padding-left:.32em;">INTERNATIONAL</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEARCH -->
+  <section data-screen-label="Search" style="background:#FAFAF8;border-bottom:1px solid #DDDBD6;">
+    <form id="roc-search" action={`${base}/residences/`} method="get"
+          style="max-width:1400px;margin:0 auto;padding:28px 40px;display:flex;flex-wrap:wrap;align-items:stretch;">
+      <div style="display:flex;flex:0 0 auto;border:1px solid #DDDBD6;">
+        <button type="submit" name="for" value="sale" style="border:0;padding:0 26px;min-height:56px;cursor:pointer;font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;background:#13294B;color:#fff;transition:all .25s ease;">{c.buy}</button>
+        <button type="submit" name="for" value="rent" class="roc-btn-navy" style="border:0;padding:0 26px;min-height:56px;cursor:pointer;font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;background:transparent;color:#13294B;transition:all .25s ease;">{c.rent}</button>
+      </div>
+      <label style="flex:1 1 150px;min-width:0;display:flex;flex-direction:column;justify-content:center;padding:8px 22px;border:1px solid #DDDBD6;margin-left:-1px;">
+        <span style="font-size:9.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A877F;">{c.parish}</span>
+        <select name="parish" style="width:100%;min-width:0;border:0;background:transparent;font-size:15px;color:#13294B;padding:2px 0;outline:none;">
+          <option value="">{c.allParishes}</option>
+          {activeParishes.map((p) => <option value={p}>{p} ({parishCounts[p]})</option>)}
+        </select>
+      </label>
+      <label style="flex:1 1 150px;min-width:0;display:flex;flex-direction:column;justify-content:center;padding:8px 22px;border:1px solid #DDDBD6;margin-left:-1px;">
+        <span style="font-size:9.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A877F;">{c.type}</span>
+        <select name="type" style="width:100%;min-width:0;border:0;background:transparent;font-size:15px;color:#13294B;padding:2px 0;outline:none;">
+          <option value="">{c.allTypes}</option>
+          {types.map((t) => <option value={t}>{t}</option>)}
+        </select>
+      </label>
+      <label style="flex:1 1 150px;min-width:0;display:flex;flex-direction:column;justify-content:center;padding:8px 22px;border:1px solid #DDDBD6;margin-left:-1px;">
+        <span style="font-size:9.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A877F;">{c.price}</span>
+        <select name="min" style="width:100%;min-width:0;border:0;background:transparent;font-size:15px;color:#13294B;padding:2px 0;outline:none;">
+          <option value="">{c.anyPrice}</option>
+          <option value="1000000">€1,000,000+</option>
+          <option value="2500000">€2,500,000+</option>
+          <option value="5000000">€5,000,000+</option>
+        </select>
+      </label>
+      <button type="submit" class="roc-btn-stone" style="flex:1 0 auto;display:flex;align-items:center;justify-content:center;padding:0 40px;min-height:56px;background:#13294B;color:#fff;border:0;cursor:pointer;font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;transition:background .25s ease;">{c.search}</button>
+    </form>
+  </section>
+
+  <!-- INTRO -->
+  <section data-screen-label="Intro" style="padding:120px 40px;">
+    <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:72px;align-items:start;">
+      <div>
+        <div style="width:40px;height:1px;background:#8A8A7A;margin-bottom:28px;"></div>
+        <div style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A877F;margin-bottom:20px;">{c.introEyebrow}</div>
+        <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:clamp(34px,3.6vw,52px);line-height:1.12;letter-spacing:-.01em;margin:0;text-wrap:balance;">{c.introTitle}</h2>
+      </div>
+      <div style="padding-top:64px;max-width:560px;">
+        <p style="font-size:17px;line-height:1.75;margin:0 0 22px;text-wrap:pretty;">{c.introP1}</p>
+        <p style="font-size:15px;line-height:1.75;color:#8A877F;margin:0 0 34px;text-wrap:pretty;">{c.introP2}</p>
+        <a href="#services" style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;border-bottom:1px solid #13294B;padding-bottom:6px;">{c.approach}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESIDENCES -->
+  <section id="residences" data-screen-label="Residences" style="padding:0 40px 120px;">
+    <div style="max-width:1400px;margin:0 auto;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap;padding-bottom:28px;border-bottom:1px solid #DDDBD6;margin-bottom:48px;">
+        <div>
+          <div style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A877F;margin-bottom:14px;">{c.selected}</div>
+          <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:clamp(32px,3vw,44px);line-height:1.1;margin:0;">{c.portfolio}</h2>
+        </div>
+        <div style="display:flex;gap:28px;flex-wrap:wrap;">
+          <button class="roc-filter" data-filter="" aria-pressed="true">{c.all}</button>
+          {filterParishes.map((p) => <button class="roc-filter" data-filter={p} aria-pressed="false">{p}</button>)}
+        </div>
+      </div>
+
+      <div id="roc-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr));gap:32px;">
+        {featured.map((p) => <PropertyCard property={p} lang={lang} />)}
+      </div>
+
+      <div style="display:flex;justify-content:center;margin-top:56px;">
+        <a href={`${base}/residences/`} class="roc-btn-navy" style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:15px 34px;border:1px solid #13294B;border-radius:2px;transition:all .25s ease;">{c.viewAll}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- HAMPTONS ASSOCIATION -->
+  <section id="association" data-screen-label="Hamptons association" style="background:#13294B;color:#fff;">
+    <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,480px),1fr));">
+      <div style="padding:110px 40px;display:flex;flex-direction:column;justify-content:center;">
+        <div style="display:flex;align-items:center;gap:28px;margin-bottom:56px;flex-wrap:wrap;">
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <span style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:28px;letter-spacing:.28em;line-height:1;">ROC<span style="color:#A8A898;">.</span></span>
+            <span style="font-size:8px;font-weight:500;letter-spacing:.42em;text-transform:uppercase;color:rgba(255,255,255,.6);">Propietats</span>
+          </div>
+          <span style="font-size:9px;font-weight:500;letter-spacing:.34em;text-transform:uppercase;color:rgba(255,255,255,.55);">{c.inAssociation}</span>
+          <span style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <img src="/brand/hamptons-wordmark.png" alt="Hamptons International" style="height:34px;width:auto;display:block;" />
+            <span style="font-size:10.2px;font-weight:600;letter-spacing:.32em;line-height:1;color:#FF5D5C;padding-left:.32em;">INTERNATIONAL</span>
+          </span>
+        </div>
+        <div style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#A8A898;margin-bottom:20px;">{c.assocLabel}</div>
+        <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:clamp(34px,3.4vw,50px);line-height:1.12;letter-spacing:-.01em;margin:0 0 28px;max-width:560px;text-wrap:balance;">{c.assocTitle}</h2>
+        <p style="font-size:16px;line-height:1.75;color:rgba(255,255,255,.78);max-width:520px;margin:0 0 44px;text-wrap:pretty;">{c.assocLead}</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;border-top:1px solid rgba(255,255,255,.18);">
+          {c.pillars.map(([t, d]) => (
+            <div style="padding:26px 24px 0 0;">
+              <div style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;font-size:21px;margin-bottom:8px;">{t}</div>
+              <div style="font-size:13px;line-height:1.6;color:rgba(255,255,255,.62);">{d}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div style="position:relative;min-height:560px;background:#0f2240;">
+        {associationImage && <img src={associationImage} alt="" loading="lazy" decoding="async"
+          style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" />}
+      </div>
+    </div>
+  </section>
+
+  <!-- PARISHES -->
+  <section id="parishes" data-screen-label="Parishes" style="padding:120px 40px;background:#F5F0EB;">
+    <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,480px),1fr));gap:72px;align-items:stretch;">
+      <div style="position:relative;min-height:560px;background:#F0EFEC;">
+        {activeParishes.map((name, i) => (
+          parishImages[name] && (
+            <img class="roc-parish-img" data-parish={name} src={parishImages[name]} alt={name} loading="lazy" decoding="async"
+                 style={`position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:${i === 0 ? 'block' : 'none'};`} />
+          )
+        ))}
+        <div style="position:absolute;left:0;right:0;bottom:0;padding:80px 32px 28px;pointer-events:none;background:linear-gradient(transparent,rgba(19,41,75,.65));color:#fff;">
+          <div id="roc-parish-name" style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:34px;line-height:1.1;">{activeParishes[0]}</div>
+        </div>
+      </div>
+      <div>
+        <div style="width:40px;height:1px;background:#8A8A7A;margin-bottom:28px;"></div>
+        <div style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A877F;margin-bottom:16px;">{c.sevenParishes}</div>
+        <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:clamp(32px,3vw,46px);line-height:1.12;margin:0 0 40px;">{c.whereToLive}</h2>
+        <div style="border-top:1px solid #DDDBD6;">
+          {PARISHES.map((name, i) => (
+            <a class="roc-parish-row" href={`${base}/residences/?parish=${encodeURIComponent(name)}`}
+               data-parish={name} aria-expanded={i === 0 ? 'true' : 'false'} style="display:block;">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;">
+                <span class="roc-parish-name" style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;font-size:24px;">{name}</span>
+                <span style="font-size:12px;color:#8A877F;white-space:nowrap;">
+                  {parishCounts[name]} {parishCounts[name] === 1 ? c.property : c.properties} <span style="font-size:13px;">→</span>
+                </span>
+              </div>
+              <p class="roc-parish-note" style="font-size:14px;line-height:1.65;color:#8A877F;margin:8px 0 0;max-width:520px;">{PARISH_NOTES[name]}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" data-screen-label="Advisory" style="padding:120px 40px;">
+    <div style="max-width:1400px;margin:0 auto;">
+      <div style="text-align:center;max-width:640px;margin:0 auto 64px;">
+        <div style="width:40px;height:1px;background:#8A8A7A;margin:0 auto 28px;"></div>
+        <div style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A877F;margin-bottom:16px;">{c.advisory}</div>
+        <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:clamp(32px,3vw,46px);line-height:1.12;margin:0;">{c.advisoryTitle}</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));border-top:1px solid #DDDBD6;border-left:1px solid #DDDBD6;">
+        {c.services.map(([n, t, d]) => (
+          <div style="padding:44px 34px 48px;border-right:1px solid #DDDBD6;border-bottom:1px solid #DDDBD6;background:#fff;">
+            <div style="font-size:10.5px;font-weight:500;letter-spacing:.18em;color:#8A8A7A;margin-bottom:28px;">{n}</div>
+            <h3 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;font-size:26px;line-height:1.2;margin:0 0 14px;">{t}</h3>
+            <p style="font-size:14px;line-height:1.7;color:#8A877F;margin:0;text-wrap:pretty;">{d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIAL -->
+  <section data-screen-label="Testimonial" style="padding:110px 40px;background:rgba(197,207,218,.35);">
+    <div style="max-width:880px;margin:0 auto;text-align:center;">
+      <p style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-style:italic;font-size:clamp(26px,2.6vw,36px);line-height:1.4;margin:0 0 32px;text-wrap:balance;">{c.quote}</p>
+      <div style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A877F;">{c.quoteAttr}</div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" data-screen-label="Contact" style="padding:120px 40px;">
+    <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:80px;">
+      <div>
+        <div style="width:40px;height:1px;background:#8A8A7A;margin-bottom:28px;"></div>
+        <div style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A877F;margin-bottom:16px;">{c.contactLabel}</div>
+        <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:clamp(32px,3vw,46px);line-height:1.12;margin:0 0 24px;text-wrap:balance;">{c.contactTitle}</h2>
+        <p style="font-size:16px;line-height:1.75;color:#8A877F;max-width:460px;margin:0 0 32px;">{c.contactLead}</p>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:15px;">
+          <a href="tel:+376747577" style="color:#13294B;">+376 747 577</a>
+          <a href="mailto:immo@rocpropietats.com" style="color:#13294B;">immo@rocpropietats.com</a>
+        </div>
+      </div>
+      <div>
+        <!-- Netlify Forms handles the submission; no server of our own. -->
+        <form name="enquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field"
+              action={`${base}/thank-you/`} style="display:flex;flex-direction:column;gap:0;">
+          <input type="hidden" name="form-name" value="enquiry" />
+          <p hidden><label>Leave this empty: <input name="bot-field" /></label></p>
+          <div style="display:flex;gap:28px;margin-bottom:32px;flex-wrap:wrap;">
+            {c.intents.map((label, i) => (
+              <label style="cursor:pointer;">
+                <input type="radio" name="intent" value={label} checked={i === 0} style="position:absolute;opacity:0;pointer-events:none;" />
+                <span class="roc-intent" style="display:inline-block;padding:0 0 8px;font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid transparent;color:#8A877F;">{label}</span>
+              </label>
+            ))}
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 28px;">
+            <input name="name" required placeholder={c.fName} style="border:0;border-bottom:1px solid #DDDBD6;background:transparent;padding:16px 0;font-size:15px;outline:none;color:#13294B;" />
+            <input name="email" type="email" required placeholder={c.fEmail} style="border:0;border-bottom:1px solid #DDDBD6;background:transparent;padding:16px 0;font-size:15px;outline:none;color:#13294B;" />
+            <input name="phone" placeholder={c.fPhone} style="border:0;border-bottom:1px solid #DDDBD6;background:transparent;padding:16px 0;font-size:15px;outline:none;color:#13294B;" />
+            <input name="parish" placeholder={c.fParish} list="roc-parishes" style="border:0;border-bottom:1px solid #DDDBD6;background:transparent;padding:16px 0;font-size:15px;outline:none;color:#13294B;" />
+            <datalist id="roc-parishes">{PARISHES.map((p) => <option value={p}></option>)}</datalist>
+          </div>
+          <textarea name="message" placeholder={c.fMessage} rows="3" style="border:0;border-bottom:1px solid #DDDBD6;background:transparent;padding:16px 0;font-size:15px;outline:none;resize:none;color:#13294B;font-family:inherit;"></textarea>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;margin-top:36px;flex-wrap:wrap;">
+            <span style="font-size:12px;color:#8A877F;max-width:300px;">{c.gdpr}</span>
+            <button type="submit" class="roc-btn-stone" style="border:1px solid #13294B;background:#13294B;color:#fff;font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:15px 34px;border-radius:2px;cursor:pointer;transition:all .25s ease;">{c.send}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <SiteFooter lang={lang} />
+
+  <style is:global>
+    .roc-intent { transition: all .25s ease; }
+    input[name="intent"]:checked + .roc-intent { color: #13294B; border-bottom-color: #13294B; }
+  </style>
+
+  <script>
+    // Portfolio parish filter.
+    const grid = document.getElementById('roc-grid');
+    document.querySelectorAll('.roc-filter').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const want = btn.dataset.filter;
+        document.querySelectorAll('.roc-filter').forEach((b) =>
+          b.setAttribute('aria-pressed', String(b === btn)));
+        grid?.querySelectorAll('[data-parish]').forEach((card) => {
+          card.style.display = !want || card.dataset.parish === want ? '' : 'none';
+        });
+      });
+    });
+
+    // Parish accordion + swapping the illustrative image.
+    const rows = document.querySelectorAll('.roc-parish-row');
+    const label = document.getElementById('roc-parish-name');
+    const images = document.querySelectorAll('.roc-parish-img');
+    rows.forEach((row) => {
+      const show = () => {
+        rows.forEach((r) => r.setAttribute('aria-expanded', String(r === row)));
+        const name = row.dataset.parish;
+        if (label) label.textContent = name;
+        let matched = false;
+        images.forEach((img) => {
+          const on = img.dataset.parish === name;
+          img.style.display = on ? 'block' : 'none';
+          if (on) matched = true;
+        });
+        // Parishes with no listing keep the previous image rather than going blank.
+        if (!matched && images.length) images[0].style.display = 'block';
+      };
+      row.addEventListener('mouseenter', show);
+      row.addEventListener('focus', show);
+    });
+  </script>
+</Base>

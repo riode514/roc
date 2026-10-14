@@ -1,0 +1,158 @@
+/* ==========================================================================
+   BARLEIGH ELLIS · Co-brand signage system
+   Lockups + shopfront applications. Builds on colors_and_type.css tokens.
+   Partner brands keep their native equity; BE leads. Navy panels are tuned
+   to each partner's native logo background so raster marks sit seamlessly.
+   ========================================================================== */
+
+:root{
+  --ham-navy:   #002b59;  /* Hamptons (white mark) native ground */
+  --ham-ink:    #0a2342;  /* Hamptons modern lockup navy */
+  --ham-coral:  #ef7c6f;  /* Hamptons accent */
+  --js-navy:    #0e1433;  /* Jackson-Stops native ground */
+  --js-red:     #c0392b;  /* Jackson-Stops griffin red */
+}
+
+*{box-sizing:border-box;}
+
+/* ---------- Barleigh Ellis wordmark (live type) ---------- */
+.cb-wm{
+  font-family:var(--be-serif);font-weight:300;
+  letter-spacing:.15em;color:var(--be-charcoal);
+  white-space:nowrap;line-height:.9;display:inline-block;
+}
+.cb-wm i{font-style:italic;}
+.cb-wm .dot{color:var(--be-stone);}
+.cb-wm.on-dark{color:#f4f1ec;}
+.cb-wm.on-dark .dot{color:var(--be-lichen);}
+
+.cb-sub{
+  font-family:var(--be-sans);font-weight:500;
+  text-transform:uppercase;color:var(--be-stone);
+  letter-spacing:.42em;line-height:1;
+}
+.cb-sub.on-dark{color:rgba(244,241,236,.62);}
+
+/* ---------- Lockup frame ---------- */
+.cb-lockup{
+  width:100%;height:100%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:0;
+  padding:46px 54px;position:relative;
+}
+.cb-lockup.light{background:var(--be-cream);}
+.cb-lockup.paper{background:var(--be-bg);}
+.cb-lockup.ham{background:var(--ham-navy);}
+.cb-lockup.js{background:var(--js-navy);}
+
+.cb-eyebrow{
+  font-family:var(--be-sans);font-weight:500;font-size:10px;
+  letter-spacing:.34em;text-transform:uppercase;
+  color:var(--be-stone);margin-bottom:30px;
+}
+.cb-lockup.ham .cb-eyebrow,
+.cb-lockup.js  .cb-eyebrow{color:rgba(244,241,236,.5);}
+
+/* row lockup: BE | divider | partner */
+.cb-row{display:flex;align-items:center;justify-content:center;gap:0;}
+.cb-be{display:flex;flex-direction:column;align-items:center;gap:14px;padding:0 44px;}
+.cb-part{display:flex;align-items:center;justify-content:center;padding:0 44px;}
+.cb-div{width:1px;align-self:stretch;background:var(--be-border);}
+.cb-lockup.ham .cb-div,
+.cb-lockup.js  .cb-div{background:rgba(244,241,236,.22);}
+
+/* stacked lockup */
+.cb-stack{display:flex;flex-direction:column;align-items:center;gap:26px;}
+.cb-hr{width:46px;height:1px;background:var(--be-stone);border:0;}
+.cb-lockup.ham .cb-hr,.cb-lockup.js .cb-hr{background:rgba(244,241,236,.3);}
+
+/* partner marks */
+.cb-ham-lockup{height:60px;width:auto;display:block;}
+.cb-ham-white{height:54px;width:auto;display:block;}
+.cb-js-mark{height:116px;width:auto;display:block;}
+
+/* ==========================================================================
+   SHOPFRONT
+   ========================================================================== */
+.cb-shop{width:100%;height:100%;position:relative;overflow:hidden;background:#d9d4cb;}
+.cb-sky{position:absolute;inset:0 0 auto 0;height:56px;
+  background:linear-gradient(#cfd6da,#dfe2df);}
+.cb-facade{position:absolute;inset:44px 0 0 0;
+  background:
+    linear-gradient(180deg,#efeae1,#e4ded3 78%,#ddd6ca);
+  border-top:3px solid #cfc8bb;}
+/* faint ashlar lines */
+.cb-facade::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    repeating-linear-gradient(180deg,transparent 0 62px,rgba(120,110,95,.07) 62px 63px);}
+
+/* fascia sign band */
+.cb-fascia{position:absolute;left:36px;right:36px;top:70px;height:108px;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(0,0,0,.25);}
+.cb-fascia.ham{background:var(--ham-navy);}
+.cb-fascia.js{background:var(--js-navy);}
+.cb-fascia::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:6px;
+  background:linear-gradient(#b7ad9b,#8f8675);} /* brass under-rail */
+.cb-fascia-inner{display:flex;align-items:center;gap:0;transform:scale(.82);}
+
+/* glazing */
+.cb-glaze{position:absolute;left:36px;right:36px;top:200px;bottom:104px;
+  display:flex;gap:14px;padding:14px;background:#2a2c28;
+  border:1px solid #1b1c19;}
+.cb-pane{flex:1;position:relative;overflow:hidden;
+  background:
+    linear-gradient(118deg,rgba(255,255,255,.18) 0 18%,transparent 18% 34%,rgba(255,255,255,.08) 34% 40%,transparent 40%),
+    linear-gradient(160deg,#26424f,#16252c 60%,#0f1a1f);
+  border:1px solid #11120f;}
+.cb-door{width:108px;position:relative;overflow:hidden;
+  background:linear-gradient(160deg,#1d3640,#101b20);
+  border:1px solid #11120f;display:flex;align-items:flex-end;justify-content:center;}
+.cb-door::before{content:"";position:absolute;left:50%;top:14px;width:1px;bottom:14px;
+  background:rgba(255,255,255,.12);}
+.cb-handle{position:absolute;top:50%;left:18px;width:5px;height:54px;border-radius:3px;
+  background:linear-gradient(#cdbf9f,#9a8f73);transform:translateY(-50%);}
+
+/* window property displays */
+.cb-displays{position:absolute;left:18px;right:18px;top:20px;
+  display:flex;gap:12px;justify-content:center;}
+.cb-card{width:104px;background:#fbfaf7;padding:7px 7px 9px;
+  border:1px solid #e7e2d8;box-shadow:0 6px 14px rgba(0,0,0,.35);}
+.cb-card .ph{width:100%;height:74px;background-size:cover;background-position:center;}
+.cb-card .pr{font-family:var(--be-serif);font-weight:300;font-size:13px;
+  color:var(--be-charcoal);margin-top:6px;text-align:center;letter-spacing:.02em;}
+.cb-card .mt{font-family:var(--be-sans);font-weight:500;font-size:6.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--be-stone);
+  text-align:center;margin-top:3px;}
+
+/* stallriser */
+.cb-stall{position:absolute;left:36px;right:36px;bottom:62px;height:42px;}
+.cb-stall.ham{background:var(--ham-navy);}
+.cb-stall.js{background:var(--js-navy);}
+.cb-stall::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:rgba(0,0,0,.3);}
+
+/* pavement */
+.cb-pave{position:absolute;left:0;right:0;bottom:0;height:62px;
+  background:linear-gradient(#c7c2b8,#bcb6ab);
+  border-top:1px solid #a8a194;}
+.cb-pave::before{content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,transparent 0 86px,rgba(90,84,74,.18) 86px 87px);}
+
+/* projecting blade sign */
+.cb-blade-wrap{position:absolute;left:36px;top:196px;z-index:5;display:flex;align-items:flex-start;}
+.cb-bracket{width:26px;height:7px;background:#3a3b38;margin-top:30px;}
+.cb-blade{width:128px;padding:18px 10px;text-align:center;
+  border:2px solid rgba(255,255,255,.16);box-shadow:0 14px 26px rgba(0,0,0,.4);}
+.cb-blade.ham{background:var(--ham-navy);}
+.cb-blade.js{background:var(--js-navy);}
+.cb-blade .bwm{font-family:var(--be-serif);font-weight:300;font-size:23px;
+  letter-spacing:.06em;color:#f4f1ec;line-height:1;}
+.cb-blade .bwm i{font-style:italic;}
+.cb-blade .bwm .dot{color:var(--be-lichen);}
+.cb-blade .bx{font-family:var(--be-sans);font-weight:500;font-size:8px;
+  letter-spacing:.3em;color:rgba(244,241,236,.55);margin:9px 0;text-transform:uppercase;}
+.cb-blade .bp{height:64px;width:auto;display:block;margin:0 auto;}
+.cb-blade .bp.ham{height:32px;}
+
+/* caption strip under artboards */
+.cb-cap{font-family:var(--be-sans);font-size:11px;color:var(--be-muted);
+  letter-spacing:.02em;line-height:1.5;}

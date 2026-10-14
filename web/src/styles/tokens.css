@@ -1,0 +1,222 @@
+/* ==========================================================================
+   BARLEIGH ELLIS — Design Tokens (Palette G · Graphite & Stone)
+   Colour + Type foundations. Import this file into any artifact.
+
+   Cormorant Garamond is self-hosted from variable font files (300–700, upright
+   + italic). Inter is self-hosted from variable font files (upright + italic).
+   --------------------------------------------------------------------------
+   GOLDEN RULES
+   · Headings  → Cormorant Garamond, weight 300 ONLY. Never bold.
+   · Body      → Inter, weight 400 (500 for small uppercase labels only).
+   · The "s" in "Ellis" is ALWAYS italic in the wordmark.
+   · No bright colours. No gradients. No shadows. Border-radius max 2px.
+   ========================================================================== */
+
+/* Cormorant Garamond — fully self-hosted, variable weight (300–700, upright + italic).
+   Inter — fully self-hosted, variable weight + optical size (upright + italic). */
+
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("/fonts/cormorant-garamond.ttf") format('truetype-variations');
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: italic;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("/fonts/cormorant-garamond-italic.ttf") format('truetype-variations');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/inter.ttf") format('truetype-variations');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/inter-italic.ttf") format('truetype-variations');
+}
+
+:root {
+  /* ---- Brand palette · Palette G ---------------------------------------- */
+  --be-charcoal:    #222420; /* Graphite — primary ink, dark surfaces        */
+  --be-stone:       #8A8A7A; /* Warm Stone — THE accent. Logo dot, rules     */
+  --be-lichen:      #A8A898; /* Lichen — lighter stone, secondary accent     */
+  --be-deep-grey:   #3A3B38; /* Deep grey — hover on charcoal                */
+
+  /* ---- Neutrals / surfaces --------------------------------------------- */
+  --be-bg:          #FAFAF8; /* Off-white page background                    */
+  --be-cream:       #F5F0EB; /* Warm cream — alt section background          */
+  --be-limestone:   #F0EFEC; /* Limestone — tonal panels, icon chips         */
+  --be-warm-white:  #F7F6F4; /* Warm white — cards on tinted bg              */
+  --be-card:        #FFFFFF; /* Pure white card surface                      */
+  --be-border:      #DDDBD6; /* Hairline border (1px)                        */
+  --be-muted:       #8A877F; /* Muted text — captions, meta, descriptions    */
+
+  /* ---- Semantic ink ----------------------------------------------------- */
+  --be-ink:         var(--be-charcoal);   /* default text             */
+  --be-ink-2:       var(--be-muted);      /* secondary text           */
+  --be-ink-invert:  #FFFFFF;              /* text on charcoal         */
+  --be-accent:      var(--be-stone);      /* the one accent           */
+
+  /* ---- Type families (live stack — nothing else; never Gabriela or Graphie) -- */
+  --be-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif; /* @kind font */
+  --be-sans:  'Inter', system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; /* @kind font */
+  --be-mono:  'JetBrains Mono', 'Fira Code', ui-monospace, monospace; /* @kind font */
+
+  /* ---- Weights (do not deviate) ----------------------------------------- */
+  --be-w-display: 300; /* @kind font */ /* all serif headings  */
+  --be-w-body:    400; /* @kind font */ /* body copy           */
+  --be-w-label:   500; /* @kind font */ /* small uppercase labels only */
+
+  /* ---- Type scale ------------------------------------------------------- */
+  --be-text-hero:   56px;  /* page heroes (serif 300)        */
+  --be-text-h1:     42px;
+  --be-text-h2:     32px;
+  --be-text-h3:     24px;
+  --be-text-price:  26px;  /* property prices (serif 300)    */
+  --be-text-lg:     18px;
+  --be-text-body:   15px;
+  --be-text-sm:     13px;
+  --be-text-xs:     11px;
+  --be-text-label:  10.5px; /* uppercase eyebrows / nav      */
+
+  /* ---- Tracking (letter-spacing) ---------------------------------------- */
+  --be-track-logo:   0.18em; /* header wordmark                */
+  --be-track-label:  0.18em; /* eyebrows, buttons, badges      */
+  --be-track-nav:    0.14em; /* nav links                      */
+  --be-track-tight: -0.01em; /* large serif display            */
+
+  /* ---- Spacing scale (8pt-ish, generous) -------------------------------- */
+  --be-s-1: 4px;
+  --be-s-2: 8px;
+  --be-s-3: 16px;
+  --be-s-4: 24px;
+  --be-s-5: 40px;
+  --be-s-6: 60px;
+  --be-s-7: 96px;
+
+  /* ---- Form / shape ----------------------------------------------------- */
+  --be-radius: 2px;        /* the ONLY radius. Often 0.        */
+  --be-hair: 1px solid var(--be-border);
+  /* No shadow tokens by design. Elevation = hairline borders + whitespace. */
+}
+
+/* ==========================================================================
+   SEMANTIC ELEMENT STYLES
+   Opt-in: add class="be" to a container to apply these to its children,
+   or copy individual rules. Keeps host pages from being clobbered.
+   ========================================================================== */
+
+.be {
+  background: var(--be-bg);
+  color: var(--be-ink);
+  font-family: var(--be-sans);
+  font-weight: var(--be-w-body);
+  font-size: var(--be-text-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.be h1, .be h2, .be h3, .be .be-display {
+  font-family: var(--be-serif);
+  font-weight: var(--be-w-display);
+  color: var(--be-ink);
+  margin: 0 0 0.4em;
+}
+.be h1 { font-size: var(--be-text-h1); line-height: 1.1; letter-spacing: var(--be-track-tight); }
+.be h2 { font-size: var(--be-text-h2); line-height: 1.15; }
+.be h3 { font-size: var(--be-text-h3); line-height: 1.25; }
+
+.be p { margin: 0 0 1em; color: var(--be-ink); }
+.be .be-muted { color: var(--be-ink-2); }
+
+/* Uppercase label / eyebrow */
+.be-eyebrow,
+.be-label {
+  font-family: var(--be-sans);
+  font-weight: var(--be-w-label);
+  font-size: var(--be-text-label);
+  letter-spacing: var(--be-track-label);
+  text-transform: uppercase;
+  color: var(--be-muted);
+}
+
+/* Hero serif */
+.be-hero {
+  font-family: var(--be-serif);
+  font-weight: var(--be-w-display);
+  font-size: var(--be-text-hero);
+  line-height: 1.08;
+  letter-spacing: var(--be-track-tight);
+}
+
+/* Price */
+.be-price {
+  font-family: var(--be-serif);
+  font-weight: var(--be-w-display);
+  font-size: var(--be-text-price);
+}
+
+/* ---- Buttons ---------------------------------------------------------- */
+.be-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--be-sans);
+  font-weight: var(--be-w-label);
+  font-size: var(--be-text-label);
+  letter-spacing: var(--be-track-label);
+  text-transform: uppercase;
+  padding: 15px 34px;
+  border: 1px solid var(--be-charcoal);
+  border-radius: var(--be-radius);
+  background: var(--be-charcoal);
+  color: #fff;
+  cursor: pointer;
+  transition: background .25s ease, color .25s ease, border-color .25s ease;
+  text-decoration: none;
+}
+.be-btn:hover { background: var(--be-stone); border-color: var(--be-stone); }
+
+.be-btn--ghost {
+  background: transparent;
+  color: var(--be-charcoal);
+  border-color: var(--be-charcoal);
+}
+.be-btn--ghost:hover { background: var(--be-charcoal); color: #fff; }
+
+.be-btn--light {
+  background: #fff;
+  color: var(--be-charcoal);
+  border-color: #fff;
+}
+.be-btn--light:hover { background: var(--be-lichen); border-color: var(--be-lichen); }
+
+/* ---- Hairline rule (signature short underline) ------------------------ */
+.be-rule {
+  width: 40px;
+  height: 1px;
+  background: var(--be-stone);
+  border: 0;
+}
+
+/* ---- The wordmark ----------------------------------------------------- */
+/* Use <span class="be-wordmark">Barleigh Elli<i>s</i><b>.</b></span> */
+.be-wordmark {
+  font-family: var(--be-serif);
+  font-weight: var(--be-w-display);
+  letter-spacing: var(--be-track-logo);
+  color: var(--be-charcoal);
+  white-space: nowrap;
+}
+.be-wordmark i { font-style: italic; }              /* the "s" in Ellis  */
+.be-wordmark b { font-weight: var(--be-w-display); color: var(--be-stone); } /* stone dot */

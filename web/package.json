@@ -1,0 +1,15 @@
+{
+  "name": "roc-propietats-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.48.1",
+    "astro": "4.16.18"
+  }
+}

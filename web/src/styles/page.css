@@ -1,0 +1,6 @@
+html,body{margin:0;background:#FAFAF8;}
+body{font-family:'Inter',system-ui,sans-serif;color:#13294B;-webkit-font-smoothing:antialiased;}
+a{color:#13294B;text-decoration:none;}
+a:hover{color:#8A8A7A;}
+*{box-sizing:border-box;}
+input,select,textarea,button{font-family:inherit;}

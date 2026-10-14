@@ -1,0 +1,15 @@
+{
+  "name": "roc-propietats",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ROC Propietats — property feed, JSON API and website.",
+  "scripts": {
+    "build": "npm --prefix web install --no-audit --no-fund && npm --prefix web run build",
+    "dev": "npm --prefix web run dev",
+    "scrape": "npm --prefix scraper run scrape",
+    "scrape:dry": "npm --prefix scraper run scrape:dry"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.48.1"
+  }
+}
