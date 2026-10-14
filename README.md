@@ -4,6 +4,17 @@ A daily feed of the ROC Propietats portfolio (Andorra), stored in Supabase,
 served as a JSON API, and presented as a website built from the Barleigh Ellis
 design system with Hamptons International co-branding.
 
+| | |
+| --- | --- |
+| Website | https://roc-propietats.netlify.app |
+| JSON feed | https://roc-propietats.netlify.app/api/properties |
+| Repository | https://github.com/riode514/roc |
+| Supabase | project `roc-propietats` (`zyzsdwnodaasutsoogix`, eu-west-1) |
+| Netlify | project `roc-propietats` |
+
+Currently carrying **76 listings** (72 for sale, 4 to let) in Catalan and
+English, with 921 images, 2 videos and 7 Matterport tours.
+
 ```
 rocpropietats.com ──scraper──▶ Supabase ──▶ JSON API  (/api/properties)
     (GiraWeb CMS)                   │
@@ -89,13 +100,17 @@ split into `images`, `videos`, `tours360` and `floorplans`.
 ## Scheduled refresh
 
 `.github/workflows/scrape.yml` runs at 03:20 UTC daily and can be triggered by
-hand with a custom delay. Repository secrets required:
+hand with a custom delay. Add these under
+**Settings → Secrets and variables → Actions** before the first run:
 
-| Secret | Purpose |
+| Secret | Value |
 | --- | --- |
-| `SUPABASE_URL` | Project URL |
-| `SUPABASE_SERVICE_ROLE_KEY` | Write access for the scraper |
-| `NETLIFY_BUILD_HOOK` | Optional — rebuilds the site after a successful crawl |
+| `SUPABASE_URL` | `https://zyzsdwnodaasutsoogix.supabase.co` |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase dashboard → Project Settings → API → `service_role` |
+| `NETLIFY_BUILD_HOOK` | `https://api.netlify.com/build_hooks/6acfd2512a1d00672b5c1bd0` |
+
+Until `SUPABASE_SERVICE_ROLE_KEY` is set the workflow will fail on its first
+step; nothing else depends on it, and the data already loaded is unaffected.
 
 Listings that disappear from the source are marked `is_active = false` with a
 `delisted_at` timestamp rather than deleted, so history is kept and the public
