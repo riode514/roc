@@ -12,8 +12,8 @@ design system with Hamptons International co-branding.
 | Supabase | project `roc-propietats` (`zyzsdwnodaasutsoogix`, eu-west-1) |
 | Netlify | project `roc-propietats` |
 
-Currently carrying **76 listings** (72 for sale, 4 to let) in Catalan and
-English, with 921 images, 2 videos and 7 Matterport tours.
+Currently carrying **76 listings** (72 for sale, 4 to let) in all four
+languages ROC publishes in, with 921 images, 2 videos and 7 Matterport tours.
 
 ```
 rocpropietats.com ──scraper──▶ Supabase ──▶ JSON API  (/api/properties)
@@ -118,9 +118,41 @@ feed drops them automatically. Every run is recorded in `crawl_runs`.
 
 ## The website
 
-Astro, statically generated. `/` and `/ca/` are the English and Catalan homes;
-`/residences/` is the filterable portfolio and `/residences/<slug>/` each
-listing. The enquiry form posts to Netlify Forms.
+Astro, statically generated — 316 pages. English sits at the root and the
+others under `/es/`, `/ca/` and `/fr/`; each has `/residences/` for the
+filterable portfolio and `/residences/<slug>/` per listing. The sitemap
+declares `hreflang` alternates so search engines serve the right language.
+The enquiry form posts to Netlify Forms.
+
+All site copy lives in `web/src/lib/i18n.js`, not in the components. Property
+titles and descriptions come from the database, and each field falls back
+through the languages on its own — ROC has not translated everything (French
+has 48 descriptions of 76, Spanish 70), so a listing keeps its title in the
+chosen language even where the description has to come from another.
+
+Interface labels say **Location**, not Parish: the term is correct for Andorra
+but unfamiliar to buyers abroad. The parish names themselves are unchanged.
+
+### Palette
+
+The design offers three schemes and defaults to **Mid navy & yellow**, which
+keeps the Hamptons navy and brings back the yellow from ROC's previous site.
+They are defined once, on `:root` in `web/src/layouts/Base.astro`:
+
+| | `--roc-ink` | `--roc-accent` | `--roc-accent2` |
+| --- | --- | --- | --- |
+| **Mid navy & yellow** | `#13294B` | `#5B6F8F` | `#FFED00` |
+| Navy | `#13294B` | `#5B6F8F` | `#C5CFDA` |
+| Graphite & stone | `#222420` | `#8A8A7A` | `#A8A898` |
+
+The yellow is only ever used on navy — as the dot in the ROC wordmark, the
+footer and association labels, and the hero button's hover. On the cream
+header the dot takes the mid-navy accent instead, because yellow on cream
+does not read.
+
+The hero photograph (`web/public/hero/`) is the Andorran landscape supplied by
+the client rather than a listing image, so the page is not tied to a property
+that may sell. Its scrim is tuned to that photograph.
 
 The design came from a Claude Design export. `docs/design-source.html` is the
 extracted source, `docs/design-markup.html` the markup alone, and
