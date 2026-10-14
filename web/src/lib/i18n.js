@@ -26,19 +26,19 @@ const en = {
   name: 'English',
   strip: 'ROC Propietats in association with Hamptons International',
 
-  nav: { residences: 'Residences', parishes: 'Parishes', hamptons: 'Hamptons', advisory: 'Advisory', contact: 'Contact' },
+  nav: { residences: 'Properties', parishes: 'Locations', hamptons: 'Hamptons', advisory: 'Advisory', contact: 'Contact' },
   cta: 'Request a Valuation',
 
-  siteTitle: 'ROC Propietats · Prime residences in Andorra',
-  eyebrow: 'Prime Residences · Principat d’Andorra',
+  siteTitle: 'ROC Propietats · Prime properties in Andorra',
+  eyebrow: 'Prime Properties · Principat d’Andorra',
   heroTitle: 'Mountain Living, Considered',
   heroLead: 'Exceptional homes across the seven parishes of Andorra, presented with the reach of an international network and the discretion of a private office.',
-  viewResidences: 'View Residences',
+  viewResidences: 'View Properties',
   association: 'The Association →',
   inAssociation: 'In association with',
 
   buy: 'Buy', rent: 'Rent',
-  parish: 'Parish', allParishes: 'All parishes',
+  parish: 'Location', allParishes: 'All locations',
   type: 'Property type', allTypes: 'All types',
   price: 'Price', anyPrice: 'Any price', search: 'Search',
 
@@ -48,8 +48,8 @@ const en = {
   introP2: 'Our association with Hamptons International places Andorran homes before an established audience of buyers in the United Kingdom and beyond, while every conversation remains personal, local and confidential.',
   approach: 'Our Approach →',
 
-  selected: 'Selected Residences', portfolio: 'Current Portfolio', all: 'All',
-  viewAll: 'View All Residences',
+  selected: 'Selected Properties', portfolio: 'Current Portfolio', all: 'All',
+  viewAll: 'View All Properties',
 
   assocLabel: 'The Association',
   assocTitle: 'Andorran homes, presented to an international audience',
@@ -60,7 +60,7 @@ const en = {
     ['One Standard', 'A considered, consistent service from enquiry to completion.'],
   ],
 
-  sevenParishes: 'The Seven Parishes', whereToLive: 'Where to Live in Andorra',
+  sevenParishes: 'Locations', whereToLive: 'Where to Live in Andorra',
   properties: 'properties', property: 'property',
 
   advisory: 'Advisory', advisoryTitle: 'A Complete, Discreet Service',
@@ -77,19 +77,19 @@ const en = {
   contactLabel: 'Valuation & Enquiries', contactTitle: 'Begin a Private Conversation',
   contactLead: 'Whether you are considering a sale, searching for a home or exploring residency, we will respond personally within one working day. Every enquiry is treated in confidence.',
   intents: ['Selling', 'Buying', 'Letting'],
-  fName: 'Full name', fEmail: 'Email address', fPhone: 'Telephone', fParish: 'Parish of interest',
+  fName: 'Full name', fEmail: 'Email address', fPhone: 'Telephone', fParish: 'Location of interest',
   fMessage: 'Tell us a little about what you are looking for',
   gdpr: 'Your details are held in accordance with Andorran data-protection law.',
   send: 'Send Enquiry',
 
-  footExplore: 'Explore', footSale: 'Residences for Sale', footRent: 'Residences to Let',
-  footParishes: 'The Parishes', footAdvisory: 'Residency Advisory',
+  footExplore: 'Explore', footSale: 'Properties for Sale', footRent: 'Properties to Let',
+  footParishes: 'Locations', footAdvisory: 'Residency Advisory',
   footOffice: 'Office', footVisit: 'Arrange a Visit →',
   rights: '© 2026 ROC Propietats. All rights reserved.',
   legal: 'Legal Notice', privacy: 'Privacy', cookies: 'Cookies',
 
   // Residences listing
-  resEyebrow: 'Full Portfolio', resTitle: 'Residences',
+  resEyebrow: 'Full Portfolio', resTitle: 'Properties',
   resLead: 'Every property currently available through ROC Propietats, refreshed daily from our register.',
   forSale: 'For sale', toLet: 'To let',
   minPrice: 'Minimum price', sort: 'Sort',
@@ -98,12 +98,12 @@ const en = {
   none: 'No properties match these criteria.', reset: 'Clear filters',
 
   // Property detail
-  back: '← All residences', ref: 'Reference', description: 'Description',
+  back: '← All properties', ref: 'Reference', description: 'Description',
   details: 'Details', features: 'Features',
   bedrooms: 'Bedrooms', bathrooms: 'Bathrooms', garage: 'Garage',
   built: 'Built surface', living: 'Living area', plot: 'Plot', terrace: 'Terrace',
   garden: 'Garden', balcony: 'Balcony', garageArea: 'Garage area',
-  typeLabel: 'Type', parishLabel: 'Parish', yes: 'Yes', no: 'No',
+  typeLabel: 'Type', parishLabel: 'Location', yes: 'Yes', no: 'No',
   enquire: 'Enquire about this property', arrange: 'Arrange a viewing',
   tour: '360° virtual tour', video: 'Video',
   related: 'You may also consider', sourced: 'Original listing on rocpropietats.com →',
@@ -121,7 +121,7 @@ const es = {
   name: 'Español',
   strip: 'ROC Propietats en asociación con Hamptons International',
 
-  nav: { residences: 'Propiedades', parishes: 'Parroquias', hamptons: 'Hamptons', advisory: 'Asesoramiento', contact: 'Contacto' },
+  nav: { residences: 'Propiedades', parishes: 'Ubicaciones', hamptons: 'Hamptons', advisory: 'Asesoramiento', contact: 'Contacto' },
   cta: 'Solicitar una valoración',
 
   siteTitle: 'ROC Propietats · Propiedades exclusivas en Andorra',
@@ -133,7 +133,7 @@ const es = {
   inAssociation: 'En asociación con',
 
   buy: 'Comprar', rent: 'Alquilar',
-  parish: 'Parroquia', allParishes: 'Todas las parroquias',
+  parish: 'Ubicación', allParishes: 'Todas las ubicaciones',
   type: 'Tipo de propiedad', allTypes: 'Todos los tipos',
   price: 'Precio', anyPrice: 'Cualquier precio', search: 'Buscar',
 
@@ -155,7 +155,7 @@ const es = {
     ['Un solo estándar', 'Un servicio cuidado y coherente, de la consulta a la firma.'],
   ],
 
-  sevenParishes: 'Las siete parroquias', whereToLive: 'Dónde vivir en Andorra',
+  sevenParishes: 'Ubicaciones', whereToLive: 'Dónde vivir en Andorra',
   properties: 'propiedades', property: 'propiedad',
 
   advisory: 'Asesoramiento', advisoryTitle: 'Un servicio completo y discreto',
@@ -172,13 +172,13 @@ const es = {
   contactLabel: 'Valoraciones y consultas', contactTitle: 'Inicie una conversación privada',
   contactLead: 'Tanto si considera una venta, busca una vivienda o explora la residencia, le responderemos personalmente en un día laborable. Cada consulta se trata con confidencialidad.',
   intents: ['Vender', 'Comprar', 'Alquilar'],
-  fName: 'Nombre completo', fEmail: 'Correo electrónico', fPhone: 'Teléfono', fParish: 'Parroquia de interés',
+  fName: 'Nombre completo', fEmail: 'Correo electrónico', fPhone: 'Teléfono', fParish: 'Ubicación de interés',
   fMessage: 'Cuéntenos un poco qué está buscando',
   gdpr: 'Sus datos se tratan conforme a la ley andorrana de protección de datos.',
   send: 'Enviar consulta',
 
   footExplore: 'Explorar', footSale: 'Propiedades en venta', footRent: 'Propiedades en alquiler',
-  footParishes: 'Las parroquias', footAdvisory: 'Asesoramiento de residencia',
+  footParishes: 'Ubicaciones', footAdvisory: 'Asesoramiento de residencia',
   footOffice: 'Oficina', footVisit: 'Concertar una visita →',
   rights: '© 2026 ROC Propietats. Todos los derechos reservados.',
   legal: 'Aviso legal', privacy: 'Privacidad', cookies: 'Cookies',
@@ -196,7 +196,7 @@ const es = {
   bedrooms: 'Habitaciones', bathrooms: 'Baños', garage: 'Garaje',
   built: 'Superficie construida', living: 'Vivienda', plot: 'Terreno', terrace: 'Terraza',
   garden: 'Jardín', balcony: 'Balcón', garageArea: 'Superficie de garaje',
-  typeLabel: 'Tipo', parishLabel: 'Parroquia', yes: 'Sí', no: 'No',
+  typeLabel: 'Tipo', parishLabel: 'Ubicación', yes: 'Sí', no: 'No',
   enquire: 'Solicitar información', arrange: 'Concertar una visita',
   tour: 'Visita virtual 360°', video: 'Vídeo',
   related: 'También puede interesarle', sourced: 'Ficha original en rocpropietats.com →',
@@ -214,7 +214,7 @@ const ca = {
   name: 'Català',
   strip: 'ROC Propietats en associació amb Hamptons International',
 
-  nav: { residences: 'Propietats', parishes: 'Parròquies', hamptons: 'Hamptons', advisory: 'Assessorament', contact: 'Contacte' },
+  nav: { residences: 'Propietats', parishes: 'Ubicacions', hamptons: 'Hamptons', advisory: 'Assessorament', contact: 'Contacte' },
   cta: 'Sol·licita una valoració',
 
   siteTitle: 'ROC Propietats · Propietats exclusives a Andorra',
@@ -226,7 +226,7 @@ const ca = {
   inAssociation: 'En associació amb',
 
   buy: 'Comprar', rent: 'Llogar',
-  parish: 'Parròquia', allParishes: 'Totes les parròquies',
+  parish: 'Ubicació', allParishes: 'Totes les ubicacions',
   type: 'Tipus de propietat', allTypes: 'Tots els tipus',
   price: 'Preu', anyPrice: 'Qualsevol preu', search: 'Cercar',
 
@@ -248,7 +248,7 @@ const ca = {
     ['Un sol estàndard', 'Un servei considerat i coherent, de la consulta a la signatura.'],
   ],
 
-  sevenParishes: 'Les set parròquies', whereToLive: 'On viure a Andorra',
+  sevenParishes: 'Ubicacions', whereToLive: 'On viure a Andorra',
   properties: 'propietats', property: 'propietat',
 
   advisory: 'Assessorament', advisoryTitle: 'Un servei complet i discret',
@@ -265,13 +265,13 @@ const ca = {
   contactLabel: 'Valoracions i consultes', contactTitle: 'Comenci una conversa privada',
   contactLead: 'Tant si considera una venda, busca una llar o explora la residència, respondrem personalment en un dia laborable. Cada consulta es tracta amb confidencialitat.',
   intents: ['Vendre', 'Comprar', 'Llogar'],
-  fName: 'Nom complet', fEmail: 'Adreça electrònica', fPhone: 'Telèfon', fParish: 'Parròquia d’interès',
+  fName: 'Nom complet', fEmail: 'Adreça electrònica', fPhone: 'Telèfon', fParish: 'Ubicació d’interès',
   fMessage: 'Expliqui’ns una mica què està buscant',
   gdpr: 'Les seves dades es tracten d’acord amb la llei andorrana de protecció de dades.',
   send: 'Enviar consulta',
 
   footExplore: 'Explora', footSale: 'Propietats en venda', footRent: 'Propietats de lloguer',
-  footParishes: 'Les parròquies', footAdvisory: 'Assessorament de residència',
+  footParishes: 'Ubicacions', footAdvisory: 'Assessorament de residència',
   footOffice: 'Oficina', footVisit: 'Concertar una visita →',
   rights: '© 2026 ROC Propietats. Tots els drets reservats.',
   legal: 'Avís legal', privacy: 'Privadesa', cookies: 'Galetes',
@@ -289,7 +289,7 @@ const ca = {
   bedrooms: 'Habitacions', bathrooms: 'Banys', garage: 'Garatge',
   built: 'Superfície construïda', living: 'Habitatge', plot: 'Terreny', terrace: 'Terrassa',
   garden: 'Jardí', balcony: 'Balcó', garageArea: 'Superfície de garatge',
-  typeLabel: 'Tipus', parishLabel: 'Parròquia', yes: 'Sí', no: 'No',
+  typeLabel: 'Tipus', parishLabel: 'Ubicació', yes: 'Sí', no: 'No',
   enquire: 'Sol·licitar informació', arrange: 'Concertar una visita',
   tour: 'Visita virtual 360°', video: 'Vídeo',
   related: 'També us pot interessar', sourced: 'Fitxa original a rocpropietats.com →',
@@ -307,7 +307,7 @@ const fr = {
   name: 'Français',
   strip: 'ROC Propietats en association avec Hamptons International',
 
-  nav: { residences: 'Propriétés', parishes: 'Paroisses', hamptons: 'Hamptons', advisory: 'Conseil', contact: 'Contact' },
+  nav: { residences: 'Propriétés', parishes: 'Localisations', hamptons: 'Hamptons', advisory: 'Conseil', contact: 'Contact' },
   cta: 'Demander une estimation',
 
   siteTitle: 'ROC Propietats · Propriétés d’exception en Andorre',
@@ -319,7 +319,7 @@ const fr = {
   inAssociation: 'En association avec',
 
   buy: 'Acheter', rent: 'Louer',
-  parish: 'Paroisse', allParishes: 'Toutes les paroisses',
+  parish: 'Localisation', allParishes: 'Toutes les localisations',
   type: 'Type de bien', allTypes: 'Tous les types',
   price: 'Prix', anyPrice: 'Tous les prix', search: 'Rechercher',
 
@@ -341,7 +341,7 @@ const fr = {
     ['Un seul standard', 'Un service réfléchi et constant, de la demande à la signature.'],
   ],
 
-  sevenParishes: 'Les sept paroisses', whereToLive: 'Où vivre en Andorre',
+  sevenParishes: 'Localisations', whereToLive: 'Où vivre en Andorre',
   properties: 'propriétés', property: 'propriété',
 
   advisory: 'Conseil', advisoryTitle: 'Un service complet et discret',
@@ -358,13 +358,13 @@ const fr = {
   contactLabel: 'Estimations et demandes', contactTitle: 'Engagez une conversation privée',
   contactLead: 'Que vous envisagiez une vente, cherchiez une demeure ou exploriez la résidence, nous vous répondrons personnellement sous un jour ouvré. Chaque demande est traitée en toute confidentialité.',
   intents: ['Vendre', 'Acheter', 'Louer'],
-  fName: 'Nom complet', fEmail: 'Adresse e-mail', fPhone: 'Téléphone', fParish: 'Paroisse recherchée',
+  fName: 'Nom complet', fEmail: 'Adresse e-mail', fPhone: 'Téléphone', fParish: 'Localisation recherchée',
   fMessage: 'Dites-nous en quelques mots ce que vous recherchez',
   gdpr: 'Vos données sont traitées conformément à la loi andorrane sur la protection des données.',
   send: 'Envoyer la demande',
 
   footExplore: 'Explorer', footSale: 'Propriétés à vendre', footRent: 'Propriétés à louer',
-  footParishes: 'Les paroisses', footAdvisory: 'Conseil en résidence',
+  footParishes: 'Localisations', footAdvisory: 'Conseil en résidence',
   footOffice: 'Bureau', footVisit: 'Organiser une visite →',
   rights: '© 2026 ROC Propietats. Tous droits réservés.',
   legal: 'Mentions légales', privacy: 'Confidentialité', cookies: 'Cookies',
@@ -382,7 +382,7 @@ const fr = {
   bedrooms: 'Chambres', bathrooms: 'Salles de bain', garage: 'Garage',
   built: 'Surface construite', living: 'Surface habitable', plot: 'Terrain', terrace: 'Terrasse',
   garden: 'Jardin', balcony: 'Balcon', garageArea: 'Surface de garage',
-  typeLabel: 'Type', parishLabel: 'Paroisse', yes: 'Oui', no: 'Non',
+  typeLabel: 'Type', parishLabel: 'Localisation', yes: 'Oui', no: 'Non',
   enquire: 'Demander des informations', arrange: 'Organiser une visite',
   tour: 'Visite virtuelle 360°', video: 'Vidéo',
   related: 'Pourrait aussi vous intéresser', sourced: 'Annonce d’origine sur rocpropietats.com →',
