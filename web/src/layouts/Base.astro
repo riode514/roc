@@ -71,6 +71,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       @media (max-width: 760px) {
         section, footer { padding-left: 20px !important; padding-right: 20px !important; }
         header > div, section > div, footer > div { padding-left: 0 !important; padding-right: 0 !important; }
+        /* The lock-up is too wide for a phone: drop the "in association with"
+           caption and its rule, and let the two marks sit closer together. */
+        .roc-logo { gap: 14px !important; flex-wrap: wrap; }
+        .roc-logo-assoc, .roc-logo-rule { display: none !important; }
+        .roc-logo img { height: 20px !important; }
       }
       @media (prefers-reduced-motion: reduce) {
         * { transition: none !important; animation: none !important; }
