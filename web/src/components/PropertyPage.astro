@@ -111,8 +111,10 @@ const pageTitle = `${title} · ${property.parish ?? 'Andorra'} · ROC Propietats
               {m.kind === 'tour360' ? c.tour : c.video}
             </div>
             <div style="position:relative;aspect-ratio:16/9;background:#F0EFEC;border:1px solid #DDDBD6;">
+              <!-- Matterport and YouTube both check the referrer before allowing
+                   an embed, so this deliberately does not send `no-referrer`. -->
               <iframe src={m.url} title={m.kind === 'tour360' ? c.tour : c.video} loading="lazy"
-                      allowfullscreen referrerpolicy="no-referrer"
+                      allowfullscreen allow="xr-spatial-tracking; fullscreen; accelerometer; gyroscope"
                       style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
             </div>
           </div>

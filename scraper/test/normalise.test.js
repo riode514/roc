@@ -80,3 +80,14 @@ test('a gallery entry with no filename is dropped', () => {
   assert.equal(media.length, 1);
   assert.match(media[0].url, /a\.jpg$/);
 });
+
+test('YouTube watch, youtu.be and Shorts links become embed URLs', async () => {
+  const { toEmbedUrl } = await import('../src/normalise.js');
+  const id = 'https://www.youtube.com/embed/h85ksHGh1sI';
+  assert.equal(toEmbedUrl('https://youtube.com/shorts/h85ksHGh1sI?feature=share'), id);
+  assert.equal(toEmbedUrl('https://www.youtube.com/watch?v=h85ksHGh1sI'), id);
+  assert.equal(toEmbedUrl('https://youtu.be/h85ksHGh1sI'), id);
+  // Already an embed, and non-YouTube URLs, are left alone.
+  assert.equal(toEmbedUrl(id), id);
+  assert.equal(toEmbedUrl('https://my.matterport.com/show/?m=abc'), 'https://my.matterport.com/show/?m=abc');
+});

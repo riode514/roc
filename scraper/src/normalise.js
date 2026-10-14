@@ -66,8 +66,9 @@ export function normaliseMedia(media) {
       // end in a slash, e.g. matterport.com/show/?m=…
       if (/^(https?:\/\/(www\.)?rocpropietats\.com)?\/continguts\/\S*\/$/i.test(url.split('?')[0])) continue;
       seen.add(url);
-      const { kind, provider } = classifyMedia(url);
-      out.push({ ...item, url, kind, provider, position: out.length });
+      const embeddable = toEmbedUrl(url);
+      const { kind, provider } = classifyMedia(embeddable);
+      out.push({ ...item, url: embeddable, kind, provider, position: out.length });
     }
   }
 
@@ -76,6 +77,21 @@ export function normaliseMedia(media) {
   return out
     .sort((a, b) => (rank[a.kind] ?? 9) - (rank[b.kind] ?? 9) || a.position - b.position)
     .map((m, i) => ({ ...m, position: i }));
+}
+
+
+/**
+ * Agents paste whatever YouTube URL they have — a watch link, a youtu.be
+ * short link, or a Shorts link. None of those render in an iframe, so they are
+ * rewritten to the embed form.
+ */
+export function toEmbedUrl(url) {
+  const m =
+    /youtube\.com\/shorts\/([\w-]{6,})/i.exec(url) ||
+    /youtube\.com\/watch\?(?:.*&)?v=([\w-]{6,})/i.exec(url) ||
+    /youtu\.be\/([\w-]{6,})/i.exec(url);
+  if (m) return `https://www.youtube.com/embed/${m[1]}`;
+  return url;
 }
 
 /** Splits a field that accidentally holds several whitespace-separated URLs. */
