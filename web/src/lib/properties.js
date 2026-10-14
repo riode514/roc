@@ -5,10 +5,12 @@
 
 import { createClient } from '@supabase/supabase-js';
 
+// astro.config.mjs copies the repo-root .env into process.env before this runs,
+// so one lookup order covers local builds and Netlify alike.
 const SUPABASE_URL =
-  import.meta.env.SUPABASE_URL ?? process.env.SUPABASE_URL;
+  process.env.SUPABASE_URL ?? import.meta.env.SUPABASE_URL;
 const SUPABASE_KEY =
-  import.meta.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.SUPABASE_PUBLISHABLE_KEY;
+  process.env.SUPABASE_PUBLISHABLE_KEY ?? import.meta.env.SUPABASE_PUBLISHABLE_KEY;
 
 export const PARISHES = [
   'Andorra la Vella',
