@@ -1,5 +1,5 @@
 ---
-import { localeBase, t } from '../lib/i18n.js';
+import { SOCIAL, localeBase, newsPath, pagePath, t } from '../lib/i18n.js';
 
 const { lang = 'en' } = Astro.props;
 const c = t(lang);
@@ -28,6 +28,8 @@ const home = `${base}/`;
         <div style="font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--roc-accent2,#A8A898);margin-bottom:6px;">{c.footExplore}</div>
         <a href={`${base}/residences/?for=sale`} style="color:rgba(255,255,255,.75);">{c.footSale}</a>
         <a href={`${base}/residences/?for=rent`} style="color:rgba(255,255,255,.75);">{c.footRent}</a>
+        <a href={newsPath(lang)} style="color:rgba(255,255,255,.75);">{c.navNews}</a>
+        <a href={pagePath('about', lang)} style="color:rgba(255,255,255,.75);">{c.navAbout}</a>
         <a href={`${home}#parishes`} style="color:rgba(255,255,255,.75);">{c.footParishes}</a>
         <a href={`${home}#services`} style="color:rgba(255,255,255,.75);">{c.footAdvisory}</a>
       </div>
@@ -39,14 +41,21 @@ const home = `${base}/`;
         <a href="mailto:immo@rocpropietats.com" style="color:rgba(255,255,255,.75);">immo@rocpropietats.com</a>
         <a href={`${home}#contact`} style="color:rgba(255,255,255,.75);">{c.footVisit}</a>
       </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;font-size:13.5px;">
+        <div style="font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--roc-accent2,#A8A898);margin-bottom:6px;">{c.followUs}</div>
+        <a href={SOCIAL.instagram} target="_blank" rel="noopener" style="color:rgba(255,255,255,.75);">Instagram</a>
+        <a href={SOCIAL.facebook} target="_blank" rel="noopener" style="color:rgba(255,255,255,.75);">Facebook</a>
+        <a href={SOCIAL.whatsapp} target="_blank" rel="noopener" style="color:rgba(255,255,255,.75);">WhatsApp</a>
+      </div>
     </div>
 
     <div style="display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-top:28px;font-size:11.5px;color:rgba(255,255,255,.5);">
       <span>{c.rights}</span>
       <div style="display:flex;gap:24px;">
-        <a href="https://rocpropietats.com/ca/avis-legal/" style="color:rgba(255,255,255,.5);">{c.legal}</a>
-        <a href="https://rocpropietats.com/ca/politica-de-privadesa/" style="color:rgba(255,255,255,.5);">{c.privacy}</a>
-        <a href="https://rocpropietats.com/ca/politica-de-galetes/" style="color:rgba(255,255,255,.5);">{c.cookies}</a>
+        <a href={pagePath('legal', lang)} style="color:rgba(255,255,255,.5);">{c.legal}</a>
+        <a href={pagePath('privacy', lang)} style="color:rgba(255,255,255,.5);">{c.privacy}</a>
+        <a href={pagePath('cookies', lang)} style="color:rgba(255,255,255,.5);">{c.cookies}</a>
       </div>
     </div>
   </div>

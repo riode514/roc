@@ -1,0 +1,135 @@
+---
+// The standing pages: the about page and the three legal notices.
+//
+// ROC's own markup is not carried across — the pages arrive as a sequence of
+// headings, paragraphs and list items, and are laid out here in our own type.
+import Base from '../layouts/Base.astro';
+import SiteHeader from './SiteHeader.astro';
+import SiteFooter from './SiteFooter.astro';
+import AgiaBanner from './AgiaBanner.astro';
+import { SOCIAL, t } from '../lib/i18n.js';
+
+const { page, pageKey, lang = 'en', video = null } = Astro.props;
+const c = t(lang);
+
+const raw = page?.blocks ?? [];
+const title = page?.title ?? '';
+
+// ROC's about page carries a "+25 / More than 25 years of experience" badge as
+// two overlapping blocks. Drop the bare number and keep the full line, which
+// is then rendered as a figure rather than as another bullet.
+const blocks = raw.filter((b, i) => {
+  if (b.type !== 'h3' && b.type !== 'h2') return true;
+  if (b.text.length > 8) return true;
+  const neighbours = [raw[i - 1], raw[i + 1]].filter(Boolean);
+  return !neighbours.some((n) => n.text.includes(b.text));
+});
+
+const STAT = /^\s*([+]?\d+\+?)\s+(.{4,})$/;
+const statOf = (b) => (b.type === 'li' ? STAT.exec(b.text) : null);
+// The about page is a short, designed read; the legal notices are long prose
+// and get a narrower measure and tighter rhythm.
+const isAbout = pageKey === 'about';
+const measure = isAbout ? '860px' : '780px';
+---
+<Base title={`${title} · ROC Propietats`} lang={lang}
+      description={blocks.find((b) => b.type === 'p')?.text?.slice(0, 180) ?? title}>
+  <div style="background:#F5F0EB;">
+    <SiteHeader tone="dark" lang={lang} />
+  </div>
+
+  <section style="padding:72px 40px 56px;background:#F5F0EB;">
+    <div style={`max-width:${measure};margin:0 auto;`}>
+      <div style="width:40px;height:1px;background:var(--roc-accent,#8A8A7A);margin-bottom:28px;"></div>
+      {isAbout && (
+        <div style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A877F;margin-bottom:16px;">{c.aboutEyebrow}</div>
+      )}
+      <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:clamp(34px,4vw,56px);line-height:1.08;margin:0;text-wrap:balance;">
+        {title}
+      </h1>
+    </div>
+  </section>
+
+  {video && (
+    <section style="padding:0;background:var(--roc-ink,#13294B);">
+      <div style="max-width:1100px;margin:0 auto;padding:56px 40px;">
+        <div style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--roc-accent2,#FFED00);margin-bottom:18px;">{video.label}</div>
+        <div style="position:relative;aspect-ratio:16/9;background:#0f2240;border:1px solid rgba(255,255,255,.14);">
+          <iframe src={`https://www.youtube-nocookie.com/embed/${video.id}?start=${video.start ?? 0}&rel=0`}
+                  title={video.label} loading="lazy" allowfullscreen
+                  allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                  style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section style="padding:64px 40px 90px;">
+    <div class="roc-content" style={`max-width:${measure};margin:0 auto;`}>
+      {blocks.map((b, i) => {
+        if (b.type === 'h2') return <h2>{b.text}</h2>;
+        if (b.type === 'h3') return <h3>{b.text}</h3>;
+        if (b.type === 'li') {
+          const stat = statOf(b);
+          if (stat) {
+            return (
+              <p class="roc-stat">
+                <span class="roc-stat-n">{stat[1]}</span>
+                <span class="roc-stat-t">{stat[2]}</span>
+              </p>
+            );
+          }
+          return <p class="roc-li">{b.text}</p>;
+        }
+        // The first paragraph of the about page carries the page.
+        return <p class={isAbout && i < 2 ? 'roc-lede' : undefined}>{b.text}</p>;
+      })}
+
+      {isAbout && (
+        <div style="margin-top:56px;padding-top:40px;border-top:1px solid #DDDBD6;display:flex;gap:40px;flex-wrap:wrap;">
+          <div>
+            <div style="font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A877F;margin-bottom:10px;">{c.footOffice}</div>
+            <p style="margin:0;font-size:15px;line-height:1.8;">
+              {SOCIAL.address}<br />
+              <a href={SOCIAL.phoneHref} style="border-bottom:1px solid #DDDBD6;">{SOCIAL.phone}</a><br />
+              <a href={`mailto:${SOCIAL.email}`} style="border-bottom:1px solid #DDDBD6;">{SOCIAL.email}</a>
+            </p>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A877F;margin-bottom:10px;">{c.followUs}</div>
+            <p style="margin:0;font-size:15px;line-height:1.8;">
+              <a href={SOCIAL.instagram} target="_blank" rel="noopener" style="border-bottom:1px solid #DDDBD6;">Instagram</a><br />
+              <a href={SOCIAL.facebook} target="_blank" rel="noopener" style="border-bottom:1px solid #DDDBD6;">Facebook</a><br />
+              <a href={SOCIAL.whatsapp} target="_blank" rel="noopener" style="border-bottom:1px solid #DDDBD6;">WhatsApp</a>
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+
+  {isAbout && <AgiaBanner lang={lang} />}
+  <SiteFooter lang={lang} />
+</Base>
+
+<style is:global>
+  .roc-content { font-size: 15.5px; line-height: 1.85; color: #3A3B38; }
+  .roc-content p { margin: 0 0 20px; text-wrap: pretty; }
+  .roc-content .roc-lede { font-size: 18px; line-height: 1.75; color: var(--roc-ink, #13294B); }
+  .roc-content h2 {
+    font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: 31px;
+    line-height: 1.2; color: var(--roc-ink, #13294B); margin: 48px 0 18px; text-wrap: balance; }
+  .roc-content h3 {
+    font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; font-size: 23px;
+    line-height: 1.25; color: var(--roc-ink, #13294B); margin: 34px 0 12px; }
+  .roc-content h2:first-child, .roc-content h3:first-child { margin-top: 0; }
+  .roc-content .roc-li { position: relative; padding-left: 20px; margin-bottom: 12px; }
+  .roc-content .roc-li::before { content: ''; position: absolute; left: 0; top: .72em;
+    width: 6px; height: 1px; background: var(--roc-accent, #8A8A7A); }
+  .roc-content .roc-stat { display: flex; align-items: baseline; gap: 18px;
+    margin: 34px 0; padding: 22px 0; border-top: 1px solid #DDDBD6; border-bottom: 1px solid #DDDBD6; }
+  .roc-content .roc-stat-n { font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 300; font-size: 54px; line-height: 1; color: var(--roc-ink, #13294B); }
+  .roc-content .roc-stat-t { font-size: 14px; letter-spacing: .04em; color: #8A877F; }
+  .roc-content a { color: var(--roc-ink, #13294B); }
+</style>

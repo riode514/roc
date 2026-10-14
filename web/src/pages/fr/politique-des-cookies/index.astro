@@ -1,0 +1,7 @@
+---
+import ContentPage from '../../../components/ContentPage.astro';
+import { getPage } from '../../../lib/content.js';
+
+const page = getPage('cookies', 'fr');
+---
+<ContentPage page={page} pageKey="cookies" lang="fr" video=null />

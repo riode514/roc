@@ -3,6 +3,7 @@ import '../styles/tokens.css';
 import '../styles/cobrand.css';
 import '../styles/design-system.css';
 import '../styles/page.css';
+import WhatsAppBubble from '../components/WhatsAppBubble.astro';
 
 const {
   title = 'ROC Propietats · Prime residences in Andorra',
@@ -38,6 +39,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <div style="background:#FAFAF8;color:var(--roc-ink,#13294B);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.6;">
       <slot />
     </div>
+    <WhatsAppBubble lang={lang} />
 
     <style is:global>
       /* Palette, as the design defines it. "Mid navy & yellow" is the chosen

@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import SiteHeader from './SiteHeader.astro';
 import SiteFooter from './SiteFooter.astro';
 import PropertyCard from './PropertyCard.astro';
+import AgiaBanner from './AgiaBanner.astro';
 import { PARISHES, getProperties, typeOf } from '../lib/properties.js';
 import { LOCALES, PARISH_NOTES, localeBase, t } from '../lib/i18n.js';
 
@@ -256,6 +257,8 @@ const c = t(lang);
       <div style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A877F;">{c.quoteAttr}</div>
     </div>
   </section>
+
+  <AgiaBanner lang={lang} />
 
   <!-- CONTACT -->
   <section id="contact" data-screen-label="Contact" style="padding:120px 40px;">

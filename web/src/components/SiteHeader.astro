@@ -1,7 +1,12 @@
 ---
 // Header as drawn in the design, in two tones: `light` sits over the hero
 // image, `dark` sits on a cream background for interior pages.
-import { localeBase, t } from '../lib/i18n.js';
+//
+// The inline nav the design showed held five links; with news and the standing
+// pages it no longer fits, so the links live in a panel behind a menu button.
+// The panel is plain CSS and a few lines of script — it works from the
+// keyboard and degrades to a visible list if the script never runs.
+import { LOCALES, SOCIAL, localeBase, newsPath, pagePath, t } from '../lib/i18n.js';
 
 const { tone = 'light', lang = 'en' } = Astro.props;
 const c = t(lang);
@@ -15,16 +20,25 @@ const rule = onImage ? 'rgba(255,255,255,.22)' : '#DDDBD6';
 const dot  = onImage ? 'var(--roc-accent2,#A8A898)' : 'var(--roc-accent,#8A8A7A)';
 
 const home = `${localeBase(lang)}/`;
-const nav = [
-  [c.nav.residences, '#residences'],
-  [c.nav.parishes,   '#parishes'],
-  [c.nav.hamptons,   '#association'],
-  [c.nav.advisory,   '#services'],
-  [c.nav.contact,    '#contact'],
+const base = localeBase(lang);
+
+const primary = [
+  [c.nav.residences, `${base}/residences/`],
+  [c.navNews,        newsPath(lang)],
+  [c.navAbout,       pagePath('about', lang)],
+  [c.nav.parishes,   `${home}#parishes`],
+  [c.nav.hamptons,   `${home}#association`],
+  [c.nav.advisory,   `${home}#services`],
+  [c.nav.contact,    `${home}#contact`],
+];
+const legal = [
+  [c.legal,   pagePath('legal', lang)],
+  [c.privacy, pagePath('privacy', lang)],
+  [c.cookies, pagePath('cookies', lang)],
 ];
 ---
-<header style={`position:relative;z-index:2;${onImage ? '' : `border-bottom:1px solid ${rule};`}`}>
-  <div style="max-width:1400px;margin:0 auto;padding:28px 40px 0;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:22px 32px;">
+<header style={`position:relative;z-index:30;${onImage ? '' : `border-bottom:1px solid ${rule};`}`}>
+  <div style="max-width:1400px;margin:0 auto;padding:28px 40px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px 32px;">
     <a href={home} class="roc-logo" style={`display:flex;align-items:center;gap:22px;color:${ink};min-width:0;`}>
       <span style="display:flex;flex-direction:column;gap:6px;">
         <span style={`font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:30px;letter-spacing:.28em;line-height:1;color:${ink};`}>ROC<span style={`color:${dot};`}>.</span></span>
@@ -40,17 +54,164 @@ const nav = [
       </span>
     </a>
 
-    <nav style={`order:3;flex:1 1 100%;display:flex;justify-content:center;gap:12px 40px;padding:16px 0;border-top:1px solid ${rule};border-bottom:1px solid ${rule};flex-wrap:wrap;font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;`}>
-      {nav.map(([label, href]) => (
-        <a href={`${home}${href}`} style={`color:${ink};`}>{label}</a>
-      ))}
-    </nav>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href={`${home}#contact`} class={`roc-cta ${onImage ? 'roc-btn-light' : 'roc-btn-stone'}`}
+         style={onImage
+           ? 'font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:13px 26px;border:1px solid rgba(255,255,255,.8);border-radius:2px;color:#fff;transition:all .25s ease;white-space:nowrap;'
+           : 'font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:13px 26px;background:var(--roc-ink,#13294B);color:#fff;border:1px solid var(--roc-ink,#13294B);border-radius:2px;transition:all .25s ease;white-space:nowrap;'}>
+        {c.cta}
+      </a>
 
-    <a href={`${home}#contact`} class={onImage ? 'roc-btn-light' : 'roc-btn-stone'}
-       style={onImage
-         ? 'font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:13px 26px;border:1px solid rgba(255,255,255,.8);border-radius:2px;color:#fff;transition:all .25s ease;'
-         : 'font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:13px 26px;background:var(--roc-ink,#13294B);color:#fff;border:1px solid var(--roc-ink,#13294B);border-radius:2px;transition:all .25s ease;'}>
-      {c.cta}
-    </a>
+      <button id="roc-menu-btn" type="button" aria-expanded="false" aria-controls="roc-menu"
+              aria-label={c.menuOpen}
+              style={`display:flex;align-items:center;gap:12px;background:none;border:1px solid ${rule};border-radius:2px;padding:12px 18px;cursor:pointer;color:${ink};font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;font-family:inherit;transition:all .25s ease;`}>
+        <span class="roc-burger" aria-hidden="true">
+          <span style={`background:${ink};`}></span>
+          <span style={`background:${ink};`}></span>
+          <span style={`background:${ink};`}></span>
+        </span>
+        <span class="roc-burger-label">{c.menuOpen}</span>
+      </button>
+    </div>
   </div>
 </header>
+
+<!-- MENU PANEL -->
+<div id="roc-menu" class="roc-menu" hidden>
+  <div class="roc-menu-scrim" data-roc-close></div>
+  <nav class="roc-menu-panel" aria-label={c.menuOpen}>
+    <div class="roc-menu-head">
+      <span style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:26px;letter-spacing:.28em;line-height:1;color:#fff;">ROC<span style="color:var(--roc-accent2,#FFED00);">.</span></span>
+      <button type="button" data-roc-close aria-label={c.menuClose} class="roc-menu-close">✕</button>
+    </div>
+
+    <ul class="roc-menu-links">
+      {primary.map(([label, href]) => <li><a href={href}>{label}</a></li>)}
+    </ul>
+
+    <div class="roc-menu-section">{c.legalLinks}</div>
+    <ul class="roc-menu-sub">
+      {legal.map(([label, href]) => <li><a href={href}>{label}</a></li>)}
+    </ul>
+
+    <div class="roc-menu-section">{c.followUs}</div>
+    <ul class="roc-menu-sub roc-menu-social">
+      <li><a href={SOCIAL.instagram} rel="noopener" target="_blank">Instagram</a></li>
+      <li><a href={SOCIAL.facebook} rel="noopener" target="_blank">Facebook</a></li>
+      <li><a href={SOCIAL.whatsapp} rel="noopener" target="_blank">WhatsApp</a></li>
+    </ul>
+
+    <div class="roc-menu-foot">
+      <a href={SOCIAL.phoneHref}>{SOCIAL.phone}</a>
+      <a href={`mailto:${SOCIAL.email}`}>{SOCIAL.email}</a>
+      <div class="roc-menu-langs">
+        {LOCALES.map((l) => (
+          <a href={`${localeBase(l)}/`} hreflang={l} aria-current={l === lang ? 'true' : undefined}>{l.toUpperCase()}</a>
+        ))}
+      </div>
+    </div>
+  </nav>
+</div>
+
+<style is:global>
+  .roc-burger { display: inline-flex; flex-direction: column; gap: 4px; width: 18px; }
+  .roc-burger span { display: block; height: 1px; width: 100%; transition: all .25s ease; }
+
+  .roc-menu[hidden] { display: none; }
+  .roc-menu { position: fixed; inset: 0; z-index: 100; }
+  .roc-menu-scrim { position: absolute; inset: 0; background: rgba(19,41,75,.55);
+    opacity: 0; transition: opacity .3s ease; }
+  .roc-menu.is-open .roc-menu-scrim { opacity: 1; }
+
+  .roc-menu-panel { position: absolute; top: 0; right: 0; height: 100%; width: min(420px, 92vw);
+    background: var(--roc-ink,#13294B); color: #fff; padding: 32px 40px 40px;
+    display: flex; flex-direction: column; overflow-y: auto;
+    transform: translateX(100%); transition: transform .32s cubic-bezier(.4,0,.2,1); }
+  .roc-menu.is-open .roc-menu-panel { transform: translateX(0); }
+
+  .roc-menu-head { display: flex; align-items: center; justify-content: space-between;
+    padding-bottom: 28px; border-bottom: 1px solid rgba(255,255,255,.16); margin-bottom: 28px; }
+  .roc-menu-close { background: none; border: 0; color: #fff; font-size: 20px; line-height: 1;
+    cursor: pointer; padding: 6px 2px; font-family: inherit; }
+  .roc-menu-close:hover { color: var(--roc-accent2,#FFED00); }
+
+  .roc-menu-links { list-style: none; margin: 0 0 32px; padding: 0; }
+  .roc-menu-links a { display: block; padding: 11px 0;
+    font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: 29px;
+    line-height: 1.15; color: #fff; transition: color .2s ease; }
+  .roc-menu-links a:hover { color: var(--roc-accent2,#FFED00); }
+
+  .roc-menu-section { font-size: 10px; font-weight: 500; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--roc-accent2,#FFED00); margin-bottom: 12px; }
+  .roc-menu-sub { list-style: none; margin: 0 0 28px; padding: 0;
+    display: flex; flex-direction: column; gap: 9px; }
+  .roc-menu-sub a { font-size: 13.5px; color: rgba(255,255,255,.75); }
+  .roc-menu-sub a:hover { color: #fff; }
+  .roc-menu-social { flex-direction: row; gap: 22px; }
+
+  .roc-menu-foot { margin-top: auto; padding-top: 26px; border-top: 1px solid rgba(255,255,255,.16);
+    display: flex; flex-direction: column; gap: 8px; font-size: 13.5px; color: rgba(255,255,255,.75); }
+  .roc-menu-foot a { color: rgba(255,255,255,.75); }
+  .roc-menu-foot a:hover { color: #fff; }
+  .roc-menu-langs { display: flex; gap: 16px; margin-top: 14px;
+    font-size: 10.5px; letter-spacing: .18em; font-weight: 500; }
+  .roc-menu-langs a[aria-current="true"] { color: var(--roc-accent2,#FFED00); }
+
+  body.roc-menu-open { overflow: hidden; }
+
+  /* Without script the panel is simply part of the page rather than a trap. */
+  .roc-menu.roc-no-js { position: static; }
+  .roc-menu.roc-no-js .roc-menu-scrim { display: none; }
+  .roc-menu.roc-no-js .roc-menu-panel { position: static; transform: none; width: auto; height: auto; }
+
+  @media (max-width: 760px) {
+    .roc-burger-label { display: none; }
+    .roc-cta { padding: 11px 18px !important; font-size: 9.5px !important; }
+    .roc-menu-panel { padding: 26px 24px 32px; }
+    .roc-menu-links a { font-size: 25px; }
+  }
+</style>
+
+<script>
+  const btn = document.getElementById('roc-menu-btn');
+  const menu = document.getElementById('roc-menu');
+  if (btn && menu) {
+    const panel = menu.querySelector('.roc-menu-panel');
+    let lastFocus = null;
+
+    const open = () => {
+      lastFocus = document.activeElement;
+      menu.hidden = false;
+      // Let the browser paint the hidden state before transitioning in.
+      requestAnimationFrame(() => menu.classList.add('is-open'));
+      btn.setAttribute('aria-expanded', 'true');
+      document.body.classList.add('roc-menu-open');
+      panel?.querySelector('a, button')?.focus();
+    };
+
+    const close = () => {
+      menu.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('roc-menu-open');
+      const done = () => { menu.hidden = true; };
+      panel?.addEventListener('transitionend', done, { once: true });
+      setTimeout(done, 400); // in case the transition is disabled
+      lastFocus instanceof HTMLElement ? lastFocus.focus() : btn.focus();
+    };
+
+    btn.addEventListener('click', () => (menu.hidden ? open() : close()));
+    menu.querySelectorAll('[data-roc-close]').forEach((el) => el.addEventListener('click', close));
+    menu.querySelectorAll('.roc-menu-panel a').forEach((a) => a.addEventListener('click', close));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !menu.hidden) close();
+      if (e.key === 'Tab' && !menu.hidden && panel) {
+        const items = [...panel.querySelectorAll('a[href], button')].filter((el) => el.offsetParent !== null);
+        if (!items.length) return;
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    });
+  }
+</script>

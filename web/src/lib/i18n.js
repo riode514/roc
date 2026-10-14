@@ -111,6 +111,21 @@ const en = {
   bedShort: 'bed', bathShort: 'bath', plotShort: 'plot',
   statusNew: 'New instruction', statusSale: 'For sale', statusRent: 'To let',
 
+
+  // Navigation, menu and standing pages
+  navNews: 'News', navAbout: 'About us',
+  menuOpen: 'Menu', menuClose: 'Close',
+  moreLinks: 'More', legalLinks: 'Legal',
+  newsTitle: 'News', newsEyebrow: 'From the office',
+  newsLead: 'Notes on the Andorran market, residency and the practicalities of moving here.',
+  readMore: 'Read more', backToNews: '← All news', published: 'Published',
+  relatedNews: 'More from the journal', allCategories: 'All',
+  aboutEyebrow: 'The office',
+  agiaTitle: 'Member of the Association of Real Estate Agents of Andorra',
+  agiaSubtitle: 'Col·legi Professional d’Agents i Gestors Immobiliaris d’Andorra',
+  followUs: 'Follow us', whatsapp: 'Message us on WhatsApp',
+  sourceNote: 'Originally published on rocpropietats.com →',
+
   thanksTitle: 'Thank you.',
   thanksBody: 'A member of our team will be in touch personally within one working day.',
   thanksBack: '← Back to home',
@@ -203,6 +218,20 @@ const es = {
   priceOnApplication: 'Precio a consultar', perMonth: '/mes',
   bedShort: 'hab', bathShort: 'baño', plotShort: 'terreno',
   statusNew: 'Nueva incorporación', statusSale: 'En venta', statusRent: 'En alquiler',
+
+
+  navNews: 'Noticias', navAbout: 'Conócenos',
+  menuOpen: 'Menú', menuClose: 'Cerrar',
+  moreLinks: 'Más', legalLinks: 'Legal',
+  newsTitle: 'Noticias', newsEyebrow: 'Desde la oficina',
+  newsLead: 'Apuntes sobre el mercado andorrano, la residencia y los aspectos prácticos de instalarse aquí.',
+  readMore: 'Leer más', backToNews: '← Todas las noticias', published: 'Publicado',
+  relatedNews: 'Más del blog', allCategories: 'Todas',
+  aboutEyebrow: 'La oficina',
+  agiaTitle: 'Miembro de la Asociación de Agentes Inmobiliarios de Andorra',
+  agiaSubtitle: 'Col·legi Professional d’Agents i Gestors Immobiliaris d’Andorra',
+  followUs: 'Síguenos', whatsapp: 'Escríbenos por WhatsApp',
+  sourceNote: 'Publicado originalmente en rocpropietats.com →',
 
   thanksTitle: 'Gracias.',
   thanksBody: 'Un miembro de nuestro equipo se pondrá en contacto personalmente en un día laborable.',
@@ -297,6 +326,20 @@ const ca = {
   bedShort: 'hab', bathShort: 'bany', plotShort: 'terreny',
   statusNew: 'Nova incorporació', statusSale: 'En venda', statusRent: 'De lloguer',
 
+
+  navNews: 'Notícies', navAbout: 'Coneix-nos',
+  menuOpen: 'Menú', menuClose: 'Tancar',
+  moreLinks: 'Més', legalLinks: 'Legal',
+  newsTitle: 'Notícies', newsEyebrow: 'Des de l’oficina',
+  newsLead: 'Apunts sobre el mercat andorrà, la residència i els aspectes pràctics d’instal·lar-s’hi.',
+  readMore: 'Llegir més', backToNews: '← Totes les notícies', published: 'Publicat',
+  relatedNews: 'Més del blog', allCategories: 'Totes',
+  aboutEyebrow: 'L’oficina',
+  agiaTitle: 'Membre de l’Associació d’Agents Immobiliaris d’Andorra',
+  agiaSubtitle: 'Col·legi Professional d’Agents i Gestors Immobiliaris d’Andorra',
+  followUs: 'Segueix-nos', whatsapp: 'Escriu-nos per WhatsApp',
+  sourceNote: 'Publicat originalment a rocpropietats.com →',
+
   thanksTitle: 'Gràcies.',
   thanksBody: 'Un membre del nostre equip es posarà en contacte personalment en un dia laborable.',
   thanksBack: '← Tornar a l’inici',
@@ -390,6 +433,20 @@ const fr = {
   bedShort: 'ch.', bathShort: 'sdb', plotShort: 'terrain',
   statusNew: 'Nouveauté', statusSale: 'À vendre', statusRent: 'À louer',
 
+
+  navNews: 'Actualités', navAbout: 'Nous connaître',
+  menuOpen: 'Menu', menuClose: 'Fermer',
+  moreLinks: 'Plus', legalLinks: 'Légal',
+  newsTitle: 'Actualités', newsEyebrow: 'Depuis le bureau',
+  newsLead: 'Notes sur le marché andorran, la résidence et les aspects pratiques d’une installation.',
+  readMore: 'Lire la suite', backToNews: '← Toutes les actualités', published: 'Publié',
+  relatedNews: 'Plus du journal', allCategories: 'Toutes',
+  aboutEyebrow: 'Le bureau',
+  agiaTitle: 'Membre de l’Association des Agents Immobiliers d’Andorre',
+  agiaSubtitle: 'Col·legi Professional d’Agents i Gestors Immobiliaris d’Andorra',
+  followUs: 'Suivez-nous', whatsapp: 'Écrivez-nous sur WhatsApp',
+  sourceNote: 'Publié à l’origine sur rocpropietats.com →',
+
   thanksTitle: 'Merci.',
   thanksBody: 'Un membre de notre équipe vous contactera personnellement sous un jour ouvré.',
   thanksBack: '← Retour à l’accueil',
@@ -440,3 +497,30 @@ export const PARISH_NOTES = {
     'Sant Julià de Lòria': 'La porte sud — vignes, lumière plus douce et le trajet le plus court vers Barcelone.',
   },
 };
+
+/** ROC's own channels. */
+export const SOCIAL = {
+  instagram: 'https://www.instagram.com/rocpropietats/',
+  facebook: 'https://www.facebook.com/profile.php?id=61554481671422',
+  whatsapp: 'https://api.whatsapp.com/send/?phone=376333899&text&type=phone_number&app_absent=0',
+  phone: '+376 747 577',
+  phoneHref: 'tel:+376747577',
+  email: 'immo@rocpropietats.com',
+  address: 'Ctra. General, AD400 La Massana',
+};
+
+/** Where each standing page lives, per language. */
+export const PAGE_SLUGS = {
+  about:   { en: 'about',   es: 'conocenos',  ca: 'coneix-nos',  fr: 'nous-connaitre' },
+  legal:   { en: 'legal-notice', es: 'aviso-legal', ca: 'avis-legal', fr: 'mentions-legales' },
+  privacy: { en: 'privacy-policy', es: 'politica-de-privacidad', ca: 'politica-de-privadesa', fr: 'politique-de-confidentialite' },
+  cookies: { en: 'cookie-policy', es: 'politica-de-galletas', ca: 'politica-de-galetes', fr: 'politique-des-cookies' },
+};
+
+export function pagePath(key, lang) {
+  return `${localeBase(lang)}/${PAGE_SLUGS[key][lang]}/`;
+}
+
+export function newsPath(lang) {
+  return `${localeBase(lang)}/news/`;
+}

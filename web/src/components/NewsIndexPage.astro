@@ -1,0 +1,126 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from './SiteHeader.astro';
+import SiteFooter from './SiteFooter.astro';
+import AgiaBanner from './AgiaBanner.astro';
+import { formatDate, getNews, newsUrl } from '../lib/content.js';
+import { t } from '../lib/i18n.js';
+
+const { lang = 'en' } = Astro.props;
+const c = t(lang);
+
+const all = await getNews();
+const [lead, ...rest] = all;
+const categories = [...new Set(all.map((a) => a.t(lang).category).filter(Boolean))].sort();
+---
+<Base title={`${c.newsTitle} · ROC Propietats`} description={c.newsLead} lang={lang}
+      image={lead?.cover_url ?? null}>
+  <div style="background:#F5F0EB;">
+    <SiteHeader tone="dark" lang={lang} />
+  </div>
+
+  <section style="padding:72px 40px 48px;background:#F5F0EB;">
+    <div style="max-width:1400px;margin:0 auto;">
+      <div style="width:40px;height:1px;background:var(--roc-accent,#8A8A7A);margin-bottom:28px;"></div>
+      <div style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A877F;margin-bottom:16px;">{c.newsEyebrow}</div>
+      <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:clamp(38px,4.2vw,64px);line-height:1.05;margin:0 0 20px;">{c.newsTitle}</h1>
+      <p style="font-size:16px;line-height:1.7;color:#8A877F;max-width:560px;margin:0;">{c.newsLead}</p>
+    </div>
+  </section>
+
+  {categories.length > 1 && (
+    <section style="background:#FAFAF8;border-top:1px solid #DDDBD6;border-bottom:1px solid #DDDBD6;position:sticky;top:0;z-index:10;">
+      <div style="max-width:1400px;margin:0 auto;padding:18px 40px;display:flex;gap:26px;flex-wrap:wrap;align-items:center;">
+        <button class="roc-filter" data-cat="" aria-pressed="true">{c.allCategories}</button>
+        {categories.map((cat) => <button class="roc-filter" data-cat={cat} aria-pressed="false">{cat}</button>)}
+        <span id="roc-news-count" style="margin-left:auto;font-size:12px;color:#8A877F;letter-spacing:.08em;"></span>
+      </div>
+    </section>
+  )}
+
+  <section style="padding:64px 40px 110px;">
+    <div style="max-width:1400px;margin:0 auto;">
+
+      {lead && (
+        <a class="roc-card roc-lead" href={newsUrl(lead, lang)} data-cat={lead.t(lang).category ?? ''}
+           style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:0;border:1px solid #DDDBD6;background:#fff;margin-bottom:56px;">
+          <div style="position:relative;aspect-ratio:16/11;background:#F0EFEC;overflow:hidden;">
+            {lead.cover_url && <img class="roc-card-img" src={lead.cover_url} alt={lead.t(lang).title ?? ''}
+                 fetchpriority="high" decoding="async"
+                 style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" />}
+          </div>
+          <div style="padding:46px 44px;display:flex;flex-direction:column;justify-content:center;">
+            <div style="font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--roc-accent,#8A8A7A);margin-bottom:12px;">
+              {lead.t(lang).category} · {formatDate(lead.published_on, lang)}
+            </div>
+            <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:clamp(27px,2.6vw,38px);line-height:1.15;margin:0 0 18px;text-wrap:balance;">
+              {lead.t(lang).title}
+            </h2>
+            {lead.t(lang).excerpt && (
+              <p style="font-size:15.5px;line-height:1.75;color:#8A877F;margin:0 0 24px;text-wrap:pretty;">{lead.t(lang).excerpt}</p>
+            )}
+            <span style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;border-bottom:1px solid var(--roc-ink,#13294B);padding-bottom:5px;align-self:flex-start;">
+              {c.readMore} →
+            </span>
+          </div>
+        </a>
+      )}
+
+      <div id="roc-news-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:32px;">
+        {rest.map((a) => (
+          <a class="roc-card" href={newsUrl(a, lang)} data-cat={a.t(lang).category ?? ''}
+             style="display:flex;flex-direction:column;background:#fff;border:1px solid #DDDBD6;">
+            <div style="position:relative;aspect-ratio:3/2;background:#F0EFEC;overflow:hidden;">
+              {a.cover_url
+                ? <img class="roc-card-img" src={a.cover_url} alt={a.t(lang).title ?? ''} loading="lazy" decoding="async"
+                       style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" />
+                : <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#8A877F;font-size:12px;">—</span>}
+            </div>
+            <div style="padding:26px 26px 28px;display:flex;flex-direction:column;flex:1;">
+              <div style="font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--roc-accent,#8A8A7A);margin-bottom:10px;">
+                {a.t(lang).category} · {formatDate(a.published_on, lang)}
+              </div>
+              <h3 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;font-size:23px;line-height:1.25;margin:0 0 14px;">
+                {a.t(lang).title}
+              </h3>
+              {a.t(lang).excerpt && (
+                <p style="font-size:14px;line-height:1.7;color:#8A877F;margin:0 0 20px;">{a.t(lang).excerpt.slice(0, 160)}{a.t(lang).excerpt.length > 160 ? '…' : ''}</p>
+              )}
+              <span style="margin-top:auto;font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--roc-accent,#8A8A7A);">{c.readMore} →</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <AgiaBanner lang={lang} />
+  <SiteFooter lang={lang} />
+
+  <script define:vars={{ copy: { showing: c.showing, of: c.of } }}>
+    const grid = document.getElementById('roc-news-grid');
+    const count = document.getElementById('roc-news-count');
+    const cards = grid ? [...grid.children] : [];
+    const leadCard = document.querySelector('.roc-lead');
+
+    document.querySelectorAll('.roc-filter').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const want = btn.dataset.cat;
+        document.querySelectorAll('.roc-filter').forEach((b) =>
+          b.setAttribute('aria-pressed', String(b === btn)));
+        let shown = 0;
+        for (const card of cards) {
+          const ok = !want || card.dataset.cat === want;
+          card.style.display = ok ? '' : 'none';
+          if (ok) shown += 1;
+        }
+        if (leadCard) {
+          const ok = !want || leadCard.dataset.cat === want;
+          leadCard.style.display = ok ? '' : 'none';
+          if (ok) shown += 1;
+        }
+        if (count) count.textContent = `${copy.showing} ${shown} ${copy.of} ${cards.length + (leadCard ? 1 : 0)}`;
+      });
+    });
+  </script>
+</Base>

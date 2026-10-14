@@ -1,0 +1,7 @@
+---
+import ContentPage from '../../../components/ContentPage.astro';
+import { getPage } from '../../../lib/content.js';
+
+const page = getPage('legal', 'fr');
+---
+<ContentPage page={page} pageKey="legal" lang="fr" video=null />

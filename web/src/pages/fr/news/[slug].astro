@@ -1,0 +1,26 @@
+---
+import NewsArticlePage from '../../../components/NewsArticlePage.astro';
+import { getNews } from '../../../lib/content.js';
+
+export async function getStaticPaths() {
+  const all = await getNews();
+  return all.map((article) => ({
+    params: { slug: article.slug },
+    props: {
+      article,
+      // Same category first, then whatever is most recent.
+      related: all
+        .filter((a) => a.slug !== article.slug)
+        .sort((a, b) => {
+          const cat = (x) => (x.category_slug === article.category_slug ? 0 : 1);
+          if (cat(a) !== cat(b)) return cat(a) - cat(b);
+          return String(b.published_on).localeCompare(String(a.published_on));
+        })
+        .slice(0, 3),
+    },
+  }));
+}
+
+const { article, related } = Astro.props;
+---
+<NewsArticlePage article={article} related={related} lang="fr" />
