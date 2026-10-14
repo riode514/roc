@@ -190,3 +190,37 @@ test('a listing with no gallery still parses, falling back to the heading', () =
   assert.equal(media.length, 0);
   assert.equal(translation.title, 'Ref. 3999');
 });
+
+test("an alt containing an apostrophe is read in full", () => {
+  // The CMS writes alt='...L'Aldosa, La Massana' without escaping the
+  // apostrophe, so a DOM parser truncates the value at "L".
+  const html = `<html><body>
+    <h1>Venda | Escaldes-Engordany | Ref. 3503</h1>
+    <div class="listing_single_property_slider lightgallery">
+      <div class='item'><a href='/continguts/immobiliaria/a.jpg' class='lg-trigger'>
+      <img class='img-fluid' src='/continguts/immobiliaria/a.jpg' alt='Ref. 3503 | Xalet | L'Aldosa, La Massana'></a></div>
+    </div>
+    <div class="additional_details"><div class="row"><div class="col">
+      <ul class="list-inline-item"><li><p>Ref. :</p></li></ul>
+      <ul class="list-inline-item"><li><p><span>3503</span></p></li></ul>
+    </div></div></div>
+  </body></html>`;
+  const { property, translation } = parseDetailPage(html,
+    { lang: 'ca', transaction: 'sale', reference: '3503', url: '/x/' });
+
+  assert.equal(property.sublocation, "L'Aldosa");
+  assert.equal(property.parish, 'La Massana');
+  assert.equal(translation.title, "Xalet, L'Aldosa");
+});
+
+test('a parish fragment in the alt never overwrites a good heading value', () => {
+  const html = `<html><body>
+    <h1>Venda | Ordino | Ref. 1</h1>
+    <div class="listing_single_property_slider lightgallery">
+      <div class='item'><img src='/a.jpg' alt='Ref. 1 | Xalet | Nowhereville'></div>
+    </div>
+    <div class="additional_details"><div class="row"></div></div>
+  </body></html>`;
+  const { property } = parseDetailPage(html, { lang: 'ca', transaction: 'sale', reference: '1', url: '/x/' });
+  assert.equal(property.parish, 'Ordino');
+});

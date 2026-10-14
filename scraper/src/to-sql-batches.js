@@ -24,11 +24,11 @@ for (let i = 0; i < results.length; i += perBatch) {
   const slice = results.slice(i, i + perBatch);
   const lines = [];
 
-  lines.push('insert into properties (reference,transaction,parish,sublocation,price,currency,price_text,bedrooms,bathrooms,garage,built_m2,living_m2,plot_m2,terrace_m2,details,source_path) values');
+  lines.push('insert into properties (reference,transaction,parish,sublocation,price,currency,price_text,bedrooms,bathrooms,garage,built_m2,living_m2,plot_m2,terrace_m2,garden_m2,balcony_m2,garage_m2,details,source_path) values');
   lines.push(slice.map(({ property: p }) =>
-    `(${q(p.reference)},${q(p.transaction)},${q(p.parish)},${q(p.sublocation)},${n(p.price)},'EUR',${q(p.price_text)},${n(p.bedrooms)},${n(p.bathrooms)},${b(p.garage)},${n(p.built_m2)},${n(p.living_m2)},${n(p.plot_m2)},${n(p.terrace_m2)},${q(JSON.stringify(p.details ?? {}))},${q(p.source_path)})`,
+    `(${q(p.reference)},${q(p.transaction)},${q(p.parish)},${q(p.sublocation)},${n(p.price)},'EUR',${q(p.price_text)},${n(p.bedrooms)},${n(p.bathrooms)},${b(p.garage)},${n(p.built_m2)},${n(p.living_m2)},${n(p.plot_m2)},${n(p.terrace_m2)},${n(p.garden_m2)},${n(p.balcony_m2)},${n(p.garage_m2)},${q(JSON.stringify(p.details ?? {}))},${q(p.source_path)})`,
   ).join(',\n'));
-  lines.push(`on conflict (reference,transaction) do update set parish=excluded.parish,sublocation=excluded.sublocation,price=excluded.price,price_text=excluded.price_text,bedrooms=excluded.bedrooms,bathrooms=excluded.bathrooms,garage=excluded.garage,built_m2=excluded.built_m2,living_m2=excluded.living_m2,plot_m2=excluded.plot_m2,terrace_m2=excluded.terrace_m2,details=excluded.details,source_path=excluded.source_path,is_active=true,delisted_at=null,last_seen_at=now();`);
+  lines.push(`on conflict (reference,transaction) do update set parish=excluded.parish,sublocation=excluded.sublocation,price=excluded.price,price_text=excluded.price_text,bedrooms=excluded.bedrooms,bathrooms=excluded.bathrooms,garage=excluded.garage,built_m2=excluded.built_m2,living_m2=excluded.living_m2,plot_m2=excluded.plot_m2,terrace_m2=excluded.terrace_m2,garden_m2=excluded.garden_m2,balcony_m2=excluded.balcony_m2,garage_m2=excluded.garage_m2,details=excluded.details,source_path=excluded.source_path,is_active=true,delisted_at=null,last_seen_at=now();`);
   lines.push('');
 
   const trRows = slice.flatMap(({ property: p, translations }) =>

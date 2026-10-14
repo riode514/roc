@@ -7,7 +7,7 @@
   "scripts": {
     "scrape": "node src/index.js",
     "scrape:dry": "node src/index.js --dry-run",
-    "test": "node --test test/"
+    "test": "node --test \"test/*.test.js\""
   },
   "engines": {
     "node": ">=20"

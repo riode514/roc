@@ -7,7 +7,7 @@
 
 import * as cheerio from 'cheerio';
 import {
-  FIELD_LABELS, SURFACE_LABELS, absoluteUrl, classifyMedia,
+  FIELD_LABELS, SURFACE_LABELS, absoluteUrl, classifyMedia, matchParish,
   parseArea, parseBoolean, parseInteger, parsePrice,
 } from './site.js';
 
@@ -59,22 +59,31 @@ export function parseDetailPage(html, { lang, transaction, reference, url }) {
 
   // --- Gallery alt carries type + sublocation + parish ---------------------
   // "Ref. 3268 | Terreny | Engolasters, Escaldes-Engordany"
+  //
+  // Read from the raw HTML rather than through the parsed DOM: the CMS writes
+  // these into single-quoted attributes without escaping apostrophes, so
+  // `alt='Ref. 3503 | Xalet | L'Aldosa, La Massana'` is truncated at "L" by any
+  // conforming parser. Matching up to the quote that actually closes the tag
+  // recovers the whole value.
   let propertyType = null;
   let sublocation = null;
-  const altText = clean($('.lightgallery img').first().attr('alt') || '');
+  const rawAlt = /<img[^>]*?\salt='(.*?)'\s*\/?>/s.exec(html);
+  const altText = clean(rawAlt ? rawAlt[1] : ($('.lightgallery img').first().attr('alt') || ''));
   const altParts = altText.split('|').map(clean).filter(Boolean);
-  // The alt is generated from the property record, so it wins over the
-  // heading, which is matched loosely and can pick up surrounding markup.
+
+  // The alt is generated from the property record, so it is preferred over the
+  // heading — but only where it yields a real parish, since a malformed alt
+  // would otherwise overwrite a good value with a fragment.
   if (altParts.length >= 3) {
     propertyType = altParts[1];
     const place = altParts[2].split(',').map(clean).filter(Boolean);
-    if (place.length >= 2) {
-      sublocation = place[0];
-      parish = place[place.length - 1];
-    } else if (place.length === 1) {
-      parish = place[0];
+    const fromAlt = matchParish(place[place.length - 1]);
+    if (fromAlt) {
+      parish = fromAlt;
+      if (place.length >= 2) sublocation = place[0];
     }
   }
+  parish = matchParish(parish) ?? parish;
   if (!propertyType) {
     // Fall back to the tag shown above the heading.
     const tags = $('.dtls_headr .tag li a, .tag li a')

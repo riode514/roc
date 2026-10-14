@@ -11,6 +11,7 @@ import { writeFile } from 'node:fs/promises';
 import { createClient } from '@supabase/supabase-js';
 import { Fetcher } from './fetcher.js';
 import { parseDetailPage, parseListingPage } from './parse.js';
+import { normaliseResult } from './normalise.js';
 import { PATHS, detailPath } from './site.js';
 
 const TRANSACTIONS = ['sale', 'rent'];
@@ -89,11 +90,11 @@ async function scrapeProperty(fetcher, { reference, transaction, langs, logger }
   const primary = byLang[PRIMARY_LANG] ?? Object.values(byLang)[0];
   if (!primary) return null;
 
-  return {
+  return normaliseResult({
     property: primary.property,
     translations: Object.values(byLang).map((r) => r.translation),
     media: primary.media,
-  };
+  });
 }
 
 async function upsert(supabase, results, logger) {

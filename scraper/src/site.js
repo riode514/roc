@@ -122,3 +122,24 @@ export function absoluteUrl(path) {
   if (/^https?:\/\//i.test(path)) return path;
   return BASE + (path.startsWith('/') ? path : `/${path}`);
 }
+
+/** The seven parishes of Andorra — the only valid values for `parish`. */
+export const PARISHES = [
+  'Andorra la Vella',
+  'Escaldes-Engordany',
+  'La Massana',
+  'Ordino',
+  'Canillo',
+  'Encamp',
+  'Sant Julià de Lòria',
+];
+
+const fold = (s) => String(s ?? '')
+  .normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+
+/** Returns the canonical parish name, or null if `value` is not one. */
+export function matchParish(value) {
+  if (!value) return null;
+  const f = fold(value);
+  return PARISHES.find((p) => fold(p) === f) ?? null;
+}
