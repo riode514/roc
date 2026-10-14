@@ -8,3 +8,5 @@ dist/
 .DS_Store
 *.log
 scraper/roc-properties.json
+scraper/roc-properties.normalised.json
+scraper/roc-translations-*.json

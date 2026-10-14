@@ -4,9 +4,10 @@ import SiteHeader from './SiteHeader.astro';
 import SiteFooter from './SiteFooter.astro';
 import PropertyCard from './PropertyCard.astro';
 import { PARISHES, getProperties, typeOf } from '../lib/properties.js';
+import { localeBase, t } from '../lib/i18n.js';
 
 const { lang = 'en' } = Astro.props;
-const base = lang === 'ca' ? '/ca' : '';
+const base = localeBase(lang);
 
 const all = await getProperties();
 const parishCounts = Object.fromEntries(
@@ -15,61 +16,41 @@ const parishCounts = Object.fromEntries(
 const activeParishes = PARISHES.filter((p) => parishCounts[p] > 0);
 const types = [...new Set(all.map((p) => typeOf(p, lang)).filter(Boolean))].sort();
 
-const c = lang === 'ca' ? {
-  eyebrow: 'Cartera completa', title: 'Residències',
-  lead: 'Totes les propietats actualment disponibles a través de ROC Propietats, actualitzades diàriament des del nostre registre.',
-  all: 'Totes', buy: 'En venda', rent: 'De lloguer',
-  parish: 'Parròquia', allParishes: 'Totes les parròquies',
-  type: 'Tipus', allTypes: 'Tots els tipus', price: 'Preu mínim', anyPrice: 'Qualsevol preu',
-  sort: 'Ordenar', sortPriceDesc: 'Preu: més alt primer', sortPriceAsc: 'Preu: més baix primer',
-  showing: 'mostrant', of: 'de', results: 'propietats', none: 'Cap propietat coincideix amb aquests criteris.',
-  reset: 'Esborrar filtres',
-} : {
-  eyebrow: 'Full Portfolio', title: 'Residences',
-  lead: 'Every property currently available through ROC Propietats, refreshed daily from our register.',
-  all: 'All', buy: 'For sale', rent: 'To let',
-  parish: 'Parish', allParishes: 'All parishes',
-  type: 'Property type', allTypes: 'All types', price: 'Minimum price', anyPrice: 'Any price',
-  sort: 'Sort', sortPriceDesc: 'Price: high to low', sortPriceAsc: 'Price: low to high',
-  showing: 'showing', of: 'of', results: 'properties', none: 'No properties match these criteria.',
-  reset: 'Clear filters',
-};
-
-const title = lang === 'ca' ? 'Residències · ROC Propietats' : 'Residences · ROC Propietats';
+const c = t(lang);
 ---
-<Base title={title} description={c.lead} lang={lang}>
+<Base title={`${c.resTitle} · ROC Propietats`} description={c.resLead} lang={lang}>
   <div style="background:#F5F0EB;">
     <SiteHeader tone="dark" lang={lang} />
   </div>
 
   <section style="padding:72px 40px 48px;background:#F5F0EB;">
     <div style="max-width:1400px;margin:0 auto;">
-      <div style="width:40px;height:1px;background:#8A8A7A;margin-bottom:28px;"></div>
-      <div style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A877F;margin-bottom:16px;">{c.eyebrow}</div>
-      <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:clamp(38px,4.2vw,64px);line-height:1.05;margin:0 0 20px;">{c.title}</h1>
-      <p style="font-size:16px;line-height:1.7;color:#8A877F;max-width:520px;margin:0;">{c.lead}</p>
+      <div style="width:40px;height:1px;background:var(--roc-accent,#8A8A7A);margin-bottom:28px;"></div>
+      <div style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A877F;margin-bottom:16px;">{c.resEyebrow}</div>
+      <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:clamp(38px,4.2vw,64px);line-height:1.05;margin:0 0 20px;">{c.resTitle}</h1>
+      <p style="font-size:16px;line-height:1.7;color:#8A877F;max-width:520px;margin:0;">{c.resLead}</p>
     </div>
   </section>
 
   <section style="background:#FAFAF8;border-top:1px solid #DDDBD6;border-bottom:1px solid #DDDBD6;position:sticky;top:0;z-index:10;">
     <div style="max-width:1400px;margin:0 auto;padding:20px 40px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;">
       <div style="display:flex;border:1px solid #DDDBD6;">
-        <button class="roc-tx" data-tx="" aria-pressed="true" style="border:0;padding:0 22px;min-height:48px;cursor:pointer;font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;background:transparent;color:#13294B;">{c.all}</button>
-        <button class="roc-tx" data-tx="sale" aria-pressed="false" style="border:0;border-left:1px solid #DDDBD6;padding:0 22px;min-height:48px;cursor:pointer;font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;background:transparent;color:#13294B;">{c.buy}</button>
-        <button class="roc-tx" data-tx="rent" aria-pressed="false" style="border:0;border-left:1px solid #DDDBD6;padding:0 22px;min-height:48px;cursor:pointer;font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;background:transparent;color:#13294B;">{c.rent}</button>
+        <button class="roc-tx" data-tx="" aria-pressed="true" style="border:0;padding:0 22px;min-height:48px;cursor:pointer;font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;background:transparent;color:var(--roc-ink,#13294B);">{c.all}</button>
+        <button class="roc-tx" data-tx="sale" aria-pressed="false" style="border:0;border-left:1px solid #DDDBD6;padding:0 22px;min-height:48px;cursor:pointer;font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;background:transparent;color:var(--roc-ink,#13294B);">{c.forSale}</button>
+        <button class="roc-tx" data-tx="rent" aria-pressed="false" style="border:0;border-left:1px solid #DDDBD6;padding:0 22px;min-height:48px;cursor:pointer;font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;background:transparent;color:var(--roc-ink,#13294B);">{c.toLet}</button>
       </div>
 
-      <select id="roc-f-parish" aria-label={c.parish} style="min-height:48px;border:1px solid #DDDBD6;background:#fff;padding:0 16px;font-size:14px;color:#13294B;">
+      <select id="roc-f-parish" aria-label={c.parish} style="min-height:48px;border:1px solid #DDDBD6;background:#fff;padding:0 16px;font-size:14px;color:var(--roc-ink,#13294B);">
         <option value="">{c.allParishes}</option>
         {activeParishes.map((p) => <option value={p}>{p} ({parishCounts[p]})</option>)}
       </select>
 
-      <select id="roc-f-type" aria-label={c.type} style="min-height:48px;border:1px solid #DDDBD6;background:#fff;padding:0 16px;font-size:14px;color:#13294B;">
+      <select id="roc-f-type" aria-label={c.type} style="min-height:48px;border:1px solid #DDDBD6;background:#fff;padding:0 16px;font-size:14px;color:var(--roc-ink,#13294B);">
         <option value="">{c.allTypes}</option>
         {types.map((t) => <option value={t}>{t}</option>)}
       </select>
 
-      <select id="roc-f-min" aria-label={c.price} style="min-height:48px;border:1px solid #DDDBD6;background:#fff;padding:0 16px;font-size:14px;color:#13294B;">
+      <select id="roc-f-min" aria-label={c.minPrice} style="min-height:48px;border:1px solid #DDDBD6;background:#fff;padding:0 16px;font-size:14px;color:var(--roc-ink,#13294B);">
         <option value="">{c.anyPrice}</option>
         <option value="500000">€500,000+</option>
         <option value="1000000">€1,000,000+</option>
@@ -77,7 +58,7 @@ const title = lang === 'ca' ? 'Residències · ROC Propietats' : 'Residences · 
         <option value="5000000">€5,000,000+</option>
       </select>
 
-      <select id="roc-f-sort" aria-label={c.sort} style="min-height:48px;border:1px solid #DDDBD6;background:#fff;padding:0 16px;font-size:14px;color:#13294B;">
+      <select id="roc-f-sort" aria-label={c.sort} style="min-height:48px;border:1px solid #DDDBD6;background:#fff;padding:0 16px;font-size:14px;color:var(--roc-ink,#13294B);">
         <option value="desc">{c.sortPriceDesc}</option>
         <option value="asc">{c.sortPriceAsc}</option>
       </select>
@@ -92,7 +73,7 @@ const title = lang === 'ca' ? 'Residències · ROC Propietats' : 'Residences · 
         {all.map((p) => <PropertyCard property={p} lang={lang} />)}
       </div>
       <p id="roc-empty" style="display:none;text-align:center;color:#8A877F;padding:80px 0;font-size:16px;">
-        {c.none} <button id="roc-reset" style="background:none;border:0;border-bottom:1px solid #13294B;color:#13294B;cursor:pointer;font-size:16px;padding:0 0 2px;margin-left:8px;">{c.reset}</button>
+        {c.none} <button id="roc-reset" style="background:none;border:0;border-bottom:1px solid var(--roc-ink,#13294B);color:var(--roc-ink,#13294B);cursor:pointer;font-size:16px;padding:0 0 2px;margin-left:8px;">{c.reset}</button>
       </p>
     </div>
   </section>
@@ -100,7 +81,7 @@ const title = lang === 'ca' ? 'Residències · ROC Propietats' : 'Residences · 
   <SiteFooter lang={lang} />
 
   <style is:global>
-    .roc-tx[aria-pressed="true"] { background: #13294B !important; color: #fff !important; }
+    .roc-tx[aria-pressed="true"] { background: var(--roc-ink,#13294B) !important; color: #fff !important; }
   </style>
 
   <script define:vars={{ copy: { showing: c.showing, of: c.of, results: c.results } }}>

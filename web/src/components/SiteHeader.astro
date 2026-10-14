@@ -1,28 +1,37 @@
 ---
 // Header as drawn in the design, in two tones: `light` sits over the hero
 // image, `dark` sits on a cream background for interior pages.
-const { tone = 'light', lang = 'en', langHref = {} } = Astro.props;
+import { localeBase, t } from '../lib/i18n.js';
+
+const { tone = 'light', lang = 'en' } = Astro.props;
+const c = t(lang);
 
 const onImage = tone === 'light';
-const ink = onImage ? '#fff' : '#13294B';
-const sub = onImage ? 'rgba(255,255,255,.7)' : '#8A8A7A';
+const ink  = onImage ? '#fff' : 'var(--roc-ink,#13294B)';
+const sub  = onImage ? 'rgba(255,255,255,.7)' : 'var(--roc-accent,#8A8A7A)';
 const rule = onImage ? 'rgba(255,255,255,.22)' : '#DDDBD6';
-const home = lang === 'ca' ? '/ca/' : '/';
+// The yellow only reads on the dark lock-up; on cream the dot takes the
+// mid-navy accent instead, exactly as the design does.
+const dot  = onImage ? 'var(--roc-accent2,#A8A898)' : 'var(--roc-accent,#8A8A7A)';
 
-const nav = lang === 'ca'
-  ? [['Residències', '#residences'], ['Parròquies', '#parishes'], ['Hamptons', '#association'], ['Assessorament', '#services'], ['Contacte', '#contact']]
-  : [['Residences', '#residences'], ['Parishes', '#parishes'], ['Hamptons', '#association'], ['Advisory', '#services'], ['Contact', '#contact']];
-const cta = lang === 'ca' ? 'Sol·licita una valoració' : 'Request a Valuation';
+const home = `${localeBase(lang)}/`;
+const nav = [
+  [c.nav.residences, '#residences'],
+  [c.nav.parishes,   '#parishes'],
+  [c.nav.hamptons,   '#association'],
+  [c.nav.advisory,   '#services'],
+  [c.nav.contact,    '#contact'],
+];
 ---
 <header style={`position:relative;z-index:2;${onImage ? '' : `border-bottom:1px solid ${rule};`}`}>
   <div style="max-width:1400px;margin:0 auto;padding:28px 40px 0;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:22px 32px;">
     <a href={home} class="roc-logo" style={`display:flex;align-items:center;gap:22px;color:${ink};min-width:0;`}>
       <span style="display:flex;flex-direction:column;gap:6px;">
-        <span style={`font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:30px;letter-spacing:.28em;line-height:1;color:${ink};`}>ROC<span style="color:#A8A898;">.</span></span>
+        <span style={`font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:30px;letter-spacing:.28em;line-height:1;color:${ink};`}>ROC<span style={`color:${dot};`}>.</span></span>
         <span style={`font-size:8.5px;font-weight:500;letter-spacing:.42em;text-transform:uppercase;color:${sub};`}>Propietats · Andorra</span>
       </span>
       <span class="roc-logo-rule" style={`width:1px;align-self:stretch;background:${rule};`}></span>
-      <span class="roc-logo-assoc" style={`font-size:8.5px;font-weight:500;letter-spacing:.34em;text-transform:uppercase;color:${sub};line-height:1.6;`}>In association<br />with</span>
+      <span class="roc-logo-assoc" style={`font-size:8.5px;font-weight:500;letter-spacing:.34em;text-transform:uppercase;color:${sub};line-height:1.6;`} set:html={c.inAssociation.replace(' ', '<br />')}></span>
       <span style="display:flex;flex-direction:column;align-items:center;gap:4px;">
         {onImage
           ? <img src="/brand/hamptons-wordmark.png" alt="Hamptons International" style="height:22px;width:auto;display:block;" />
@@ -33,15 +42,15 @@ const cta = lang === 'ca' ? 'Sol·licita una valoració' : 'Request a Valuation'
 
     <nav style={`order:3;flex:1 1 100%;display:flex;justify-content:center;gap:12px 40px;padding:16px 0;border-top:1px solid ${rule};border-bottom:1px solid ${rule};flex-wrap:wrap;font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;`}>
       {nav.map(([label, href]) => (
-        <a href={href.startsWith('#') ? `${home}${href}` : href} style={`color:${ink};`}>{label}</a>
+        <a href={`${home}${href}`} style={`color:${ink};`}>{label}</a>
       ))}
     </nav>
 
     <a href={`${home}#contact`} class={onImage ? 'roc-btn-light' : 'roc-btn-stone'}
        style={onImage
          ? 'font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:13px 26px;border:1px solid rgba(255,255,255,.8);border-radius:2px;color:#fff;transition:all .25s ease;'
-         : 'font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:13px 26px;background:#13294B;color:#fff;border:1px solid #13294B;border-radius:2px;transition:all .25s ease;'}>
-      {cta}
+         : 'font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:13px 26px;background:var(--roc-ink,#13294B);color:#fff;border:1px solid var(--roc-ink,#13294B);border-radius:2px;transition:all .25s ease;'}>
+      {c.cta}
     </a>
   </div>
 </header>

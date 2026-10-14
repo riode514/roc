@@ -4,6 +4,7 @@
 // read-only publishable key. RLS keeps it to active listings.
 
 import { createClient } from '@supabase/supabase-js';
+import { INTL_LOCALE, t } from './i18n.js';
 
 // astro.config.mjs copies the repo-root .env into process.env before this runs,
 // so one lookup order covers local builds and Netlify alike.
@@ -21,17 +22,6 @@ export const PARISHES = [
   'Encamp',
   'Sant Julià de Lòria',
 ];
-
-/** Short editorial notes shown under a parish in the design's accordion. */
-export const PARISH_NOTES = {
-  'Andorra la Vella': 'The capital — commerce, the Meritxell avenue and apartments within walking distance of everything.',
-  'Escaldes-Engordany': 'The most sought-after address for prime residences, from Engolasters chalets to apartments steps from the thermal quarter.',
-  'La Massana': 'Valley living with quick access to Vallnord, favoured by families relocating to the Principality.',
-  'Ordino': 'The quietest of the seven, known for restored stone bordas and the Vall d’Ordino.',
-  'Canillo': 'Mountain and ski addresses above the valley floor, with Soldeu and Grandvalira close at hand.',
-  'Encamp': 'Well-connected and better value, with the Funicamp link into the Grandvalira domain.',
-  'Sant Julià de Lòria': 'The southern gateway to Andorra, bordering Spain, with a quieter rural character.',
-};
 
 /** Fetches every active listing with its translations and media. */
 export async function getProperties() {
@@ -63,9 +53,26 @@ function normalise(row) {
     tours,
     cover: images[0]?.url ?? null,
     slug: `${row.transaction === 'rent' ? 'to-let' : 'for-sale'}-${row.reference}`,
+    // ROC has not translated every listing — 21 of them have no English
+    // description, for instance. Each field falls back on its own, so a
+    // missing description does not also cost us the title, and vice versa.
     t(lang) {
       const tr = row.translations ?? {};
-      return tr[lang] ?? tr.en ?? tr.ca ?? {};
+      const order = [lang, 'en', 'ca', 'es', 'fr'];
+      const pick = (field) => {
+        for (const l of order) {
+          const v = tr[l]?.[field];
+          if (v != null && v !== '' && !(Array.isArray(v) && v.length === 0)) return v;
+        }
+        return null;
+      };
+      return {
+        title: pick('title'),
+        description: pick('description'),
+        property_type: pick('property_type'),
+        features: pick('features') ?? [],
+        source_url: tr[lang]?.source_url ?? pick('source_url'),
+      };
     },
   };
 }
@@ -73,26 +80,25 @@ function normalise(row) {
 // --- formatting -------------------------------------------------------------
 
 export function formatPrice(property, lang = 'en') {
-  if (property.price == null) return lang === 'ca' ? 'Preu a consultar' : 'Price on application';
-  const n = new Intl.NumberFormat(lang === 'ca' ? 'ca-AD' : 'en-GB', {
+  const c = t(lang);
+  if (property.price == null) return c.priceOnApplication;
+  const n = new Intl.NumberFormat(INTL_LOCALE[lang] ?? 'en-GB', {
     style: 'currency',
     currency: property.currency || 'EUR',
     maximumFractionDigits: 0,
   }).format(property.price);
-  return property.transaction === 'rent' ? `${n}${lang === 'ca' ? '/mes' : ' pcm'}` : n;
+  return property.transaction === 'rent' ? `${n}${c.perMonth}` : n;
 }
 
 /** "5 bed · 6 bath · 612 m²" — omits parts the source does not provide. */
 export function formatStats(property, lang = 'en') {
-  const words = lang === 'ca'
-    ? { bed: 'hab', bath: 'bany', plot: 'parcel·la' }
-    : { bed: 'bed', bath: 'bath', plot: 'plot' };
+  const c = t(lang);
   const parts = [];
-  if (property.bedrooms) parts.push(`${property.bedrooms} ${words.bed}`);
-  if (property.bathrooms) parts.push(`${property.bathrooms} ${words.bath}`);
+  if (property.bedrooms) parts.push(`${property.bedrooms} ${c.bedShort}`);
+  if (property.bathrooms) parts.push(`${property.bathrooms} ${c.bathShort}`);
   const area = property.built_m2 ?? property.living_m2;
   if (area) parts.push(`${formatArea(area)} m²`);
-  else if (property.plot_m2) parts.push(`${formatArea(property.plot_m2)} m² ${words.plot}`);
+  else if (property.plot_m2) parts.push(`${formatArea(property.plot_m2)} m² ${c.plotShort}`);
   return parts.join(' · ');
 }
 
@@ -104,19 +110,16 @@ export function formatArea(value) {
 
 /** The badge in the card's top-left corner. */
 export function statusLabel(property, lang = 'en') {
+  const c = t(lang);
   const isNew = property.first_seen_at &&
     Date.now() - new Date(property.first_seen_at).getTime() < 21 * 24 * 60 * 60 * 1000;
-  if (lang === 'ca') {
-    if (isNew) return 'Nova incorporació';
-    return property.transaction === 'rent' ? 'De lloguer' : 'En venda';
-  }
-  if (isNew) return 'New instruction';
-  return property.transaction === 'rent' ? 'To let' : 'For sale';
+  if (isNew) return c.statusNew;
+  return property.transaction === 'rent' ? c.statusRent : c.statusSale;
 }
 
 export function titleOf(property, lang = 'en') {
-  const t = property.t(lang);
-  return t.title || `Ref. ${property.reference}`;
+  const tr = property.t(lang);
+  return tr.title || `Ref. ${property.reference}`;
 }
 
 export function descriptionOf(property, lang = 'en') {

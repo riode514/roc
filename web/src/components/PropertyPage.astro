@@ -6,40 +6,20 @@ import PropertyCard from './PropertyCard.astro';
 import {
   descriptionOf, formatArea, formatPrice, formatStats, statusLabel, titleOf, typeOf,
 } from '../lib/properties.js';
+import { localeBase, t } from '../lib/i18n.js';
 
 const { property, related = [], lang = 'en' } = Astro.props;
-const base = lang === 'ca' ? '/ca' : '';
+const base = localeBase(lang);
 
 const title = titleOf(property, lang);
 const description = descriptionOf(property, lang);
-const t = property.t(lang);
-
-const c = lang === 'ca' ? {
-  back: '← Totes les residències', ref: 'Referència', description: 'Descripció',
-  details: 'Detalls', features: 'Característiques',
-  bedrooms: 'Habitacions', bathrooms: 'Banys', garage: 'Garatge',
-  built: 'Superfície construïda', living: 'Habitatge', plot: 'Terreny', terrace: 'Terrassa',
-  type: 'Tipus', parish: 'Parròquia', yes: 'Sí', no: 'No',
-  enquire: 'Sol·licitar informació', arrange: 'Concertar una visita',
-  tour: 'Visita virtual 360°', video: 'Vídeo',
-  related: 'També us pot interessar', sourced: 'Fitxa original a rocpropietats.com →',
-  gallery: 'Galeria', viewAll: 'Veure totes les imatges',
-} : {
-  back: '← All residences', ref: 'Reference', description: 'Description',
-  details: 'Details', features: 'Features',
-  bedrooms: 'Bedrooms', bathrooms: 'Bathrooms', garage: 'Garage',
-  built: 'Built surface', living: 'Living area', plot: 'Plot', terrace: 'Terrace',
-  type: 'Type', parish: 'Parish', yes: 'Yes', no: 'No',
-  enquire: 'Enquire about this property', arrange: 'Arrange a viewing',
-  tour: '360° virtual tour', video: 'Video',
-  related: 'You may also consider', sourced: 'Original listing on rocpropietats.com →',
-  gallery: 'Gallery', viewAll: 'View all images',
-};
+const c = t(lang);
+const tr = property.t(lang);
 
 const rows = [
   [c.ref, property.reference],
-  [c.type, typeOf(property, lang)],
-  [c.parish, [property.sublocation, property.parish].filter(Boolean).join(', ')],
+  [c.typeLabel, typeOf(property, lang)],
+  [c.parishLabel, [property.sublocation, property.parish].filter(Boolean).join(', ')],
   [c.bedrooms, property.bedrooms],
   [c.bathrooms, property.bathrooms],
   [c.built, property.built_m2 ? `${formatArea(property.built_m2)} m²` : null],
@@ -63,8 +43,8 @@ const pageTitle = `${title} · ${property.parish ?? 'Andorra'} · ROC Propietats
       <div style="min-width:0;">
         <a href={`${base}/residences/`} style="font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A877F;">{c.back}</a>
         <div style="display:flex;align-items:center;gap:14px;margin:22px 0 10px;flex-wrap:wrap;">
-          <span style="background:#13294B;color:#fff;font-size:9.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:6px 10px;border-radius:2px;">{statusLabel(property, lang)}</span>
-          <span style="font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A8A7A;">{property.parish ?? ''}</span>
+          <span style="background:var(--roc-ink,#13294B);color:#fff;font-size:9.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:6px 10px;border-radius:2px;">{statusLabel(property, lang)}</span>
+          <span style="font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--roc-accent,#8A8A7A);">{property.parish ?? ''}</span>
         </div>
         <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:clamp(34px,4vw,58px);line-height:1.08;margin:0;text-wrap:balance;">{title}</h1>
       </div>
@@ -77,7 +57,7 @@ const pageTitle = `${title} · ${property.parish ?? 'Andorra'} · ROC Propietats
 
   <!-- GALLERY -->
   {images.length > 0 && (
-    <section style="padding:0;background:#13294B;">
+    <section style="padding:0;background:var(--roc-ink,#13294B);">
       <div style="position:relative;">
         <img id="roc-hero-img" src={images[0].url} alt={title} fetchpriority="high"
              style="width:100%;max-height:min(78vh,820px);object-fit:cover;display:block;" />
@@ -129,23 +109,23 @@ const pageTitle = `${title} · ${property.parish ?? 'Andorra'} · ROC Propietats
       <div>
         {description && (
           <>
-            <div style="width:40px;height:1px;background:#8A8A7A;margin-bottom:24px;"></div>
+            <div style="width:40px;height:1px;background:var(--roc-accent,#8A8A7A);margin-bottom:24px;"></div>
             <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:32px;margin:0 0 20px;">{c.description}</h2>
             <p style="font-size:16px;line-height:1.8;color:#3A3B38;margin:0 0 32px;text-wrap:pretty;white-space:pre-line;">{description}</p>
           </>
         )}
 
-        {t.features?.length > 0 && (
+        {tr.features?.length > 0 && (
           <>
             <h3 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;font-size:24px;margin:32px 0 16px;">{c.features}</h3>
             <ul style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px 24px;list-style:none;padding:0;margin:0;font-size:14.5px;color:#3A3B38;">
-              {t.features.map((f) => <li style="padding:6px 0;border-bottom:1px solid #DDDBD6;">{f}</li>)}
+              {tr.features.map((f) => <li style="padding:6px 0;border-bottom:1px solid #DDDBD6;">{f}</li>)}
             </ul>
           </>
         )}
 
         <p style="margin:40px 0 0;font-size:12.5px;">
-          <a href={t.source_url} rel="nofollow noopener" target="_blank" style="color:#8A877F;border-bottom:1px solid #DDDBD6;padding-bottom:3px;">{c.sourced}</a>
+          <a href={tr.source_url} rel="nofollow noopener" target="_blank" style="color:#8A877F;border-bottom:1px solid #DDDBD6;padding-bottom:3px;">{c.sourced}</a>
         </p>
       </div>
 
@@ -156,17 +136,17 @@ const pageTitle = `${title} · ${property.parish ?? 'Andorra'} · ROC Propietats
             {rows.map(([label, value]) => (
               <>
                 <dt style="font-size:13px;color:#8A877F;padding:13px 0;border-bottom:1px solid #DDDBD6;">{label}</dt>
-                <dd style="font-size:14px;margin:0;padding:13px 0;border-bottom:1px solid #DDDBD6;text-align:right;color:#13294B;">{value}</dd>
+                <dd style="font-size:14px;margin:0;padding:13px 0;border-bottom:1px solid #DDDBD6;text-align:right;color:var(--roc-ink,#13294B);">{value}</dd>
               </>
             ))}
           </dl>
 
           <a href={`${base}/#contact`} class="roc-btn-stone"
-             style="display:block;text-align:center;margin-top:32px;border:1px solid #13294B;background:#13294B;color:#fff;font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:16px 24px;border-radius:2px;transition:all .25s ease;">
+             style="display:block;text-align:center;margin-top:32px;border:1px solid var(--roc-ink,#13294B);background:var(--roc-ink,#13294B);color:#fff;font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:16px 24px;border-radius:2px;transition:all .25s ease;">
             {c.enquire}
           </a>
           <a href="tel:+376747577" class="roc-btn-navy"
-             style="display:block;text-align:center;margin-top:12px;border:1px solid #13294B;color:#13294B;font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:16px 24px;border-radius:2px;transition:all .25s ease;">
+             style="display:block;text-align:center;margin-top:12px;border:1px solid var(--roc-ink,#13294B);color:var(--roc-ink,#13294B);font-size:10.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:16px 24px;border-radius:2px;transition:all .25s ease;">
             {c.arrange}
           </a>
         </div>

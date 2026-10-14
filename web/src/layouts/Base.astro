@@ -35,21 +35,34 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <link rel="preconnect" href="https://rocpropietats.com" />
   </head>
   <body>
-    <div style="background:#FAFAF8;color:#13294B;font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.6;">
+    <div style="background:#FAFAF8;color:var(--roc-ink,#13294B);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.6;">
       <slot />
     </div>
 
     <style is:global>
+      /* Palette, as the design defines it. "Mid navy & yellow" is the chosen
+         one: it keeps the Hamptons navy and brings back the yellow from ROC's
+         previous site as the accent. The other two are the design's
+         alternatives, kept here so the scheme can be switched in one place.
+           Navy            #13294B  #5B6F8F  #C5CFDA
+           Graphite & stone #222420 #8A8A7A  #A8A898
+         The yellow is only ever used on navy — never as text on cream. */
+      :root {
+        --roc-ink:     #13294B;
+        --roc-accent:  #5B6F8F;
+        --roc-accent2: #FFED00;
+      }
+
       /* The design expressed hovers as a `style-hover` attribute; these are the
          same transitions written as real CSS. */
       a { text-decoration: none; color: inherit; }
       img { max-width: 100%; }
-      *:focus-visible { outline: 2px solid #8A8A7A; outline-offset: 3px; }
+      *:focus-visible { outline: 2px solid var(--roc-accent,#8A8A7A); outline-offset: 3px; }
 
-      .roc-btn-light:hover { background: #fff !important; color: #13294B !important; }
-      .roc-btn-solid:hover { background: #A8A898 !important; color: #13294B !important; }
-      .roc-btn-navy:hover  { background: #13294B !important; color: #fff !important; }
-      .roc-btn-stone:hover { background: #8A8A7A !important; border-color: #8A8A7A !important; color: #fff !important; }
+      .roc-btn-light:hover { background: #fff !important; color: var(--roc-ink,#13294B) !important; }
+      .roc-btn-solid:hover { background: var(--roc-accent2,#A8A898) !important; color: var(--roc-ink,#13294B) !important; }
+      .roc-btn-navy:hover  { background: var(--roc-ink,#13294B) !important; color: #fff !important; }
+      .roc-btn-stone:hover { background: var(--roc-accent,#8A8A7A) !important; border-color: var(--roc-accent,#8A8A7A) !important; color: #fff !important; }
       .roc-card { transition: transform .3s ease, box-shadow .3s ease; }
       .roc-card:hover { transform: translateY(-4px); }
       .roc-card:hover .roc-card-img { transform: scale(1.03); }
@@ -58,13 +71,13 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       .roc-filter { background: none; border: 0; padding: 0 0 8px; cursor: pointer;
         font-size: 10.5px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase;
         border-bottom: 1px solid transparent; color: #8A877F; transition: all .25s ease; }
-      .roc-filter[aria-pressed="true"] { color: #13294B; border-bottom-color: #13294B; }
-      .roc-filter:hover { color: #13294B; }
+      .roc-filter[aria-pressed="true"] { color: var(--roc-ink,#13294B); border-bottom-color: var(--roc-ink,#13294B); }
+      .roc-filter:hover { color: var(--roc-ink,#13294B); }
 
       .roc-parish-row { border-bottom: 1px solid #DDDBD6; padding: 20px 0; cursor: pointer; }
       .roc-parish-row .roc-parish-name { color: #8A877F; transition: color .25s ease; }
       .roc-parish-row[aria-expanded="true"] .roc-parish-name,
-      .roc-parish-row:hover .roc-parish-name { color: #13294B; }
+      .roc-parish-row:hover .roc-parish-name { color: var(--roc-ink,#13294B); }
       .roc-parish-note { display: none; }
       .roc-parish-row[aria-expanded="true"] .roc-parish-note { display: block; }
 

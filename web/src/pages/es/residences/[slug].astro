@@ -1,0 +1,26 @@
+---
+import PropertyPage from '../../../components/PropertyPage.astro';
+import { getProperties } from '../../../lib/properties.js';
+
+export async function getStaticPaths() {
+  const all = await getProperties();
+  return all.map((property) => ({
+    params: { slug: property.slug },
+    props: {
+      property,
+      related: all
+        .filter((p) => p.slug !== property.slug)
+        .sort((a, b) => {
+          const parish = (x) => (x.parish === property.parish ? 0 : 1);
+          if (parish(a) !== parish(b)) return parish(a) - parish(b);
+          return Math.abs((a.price ?? 0) - (property.price ?? 0)) -
+                 Math.abs((b.price ?? 0) - (property.price ?? 0));
+        })
+        .slice(0, 3),
+    },
+  }));
+}
+
+const { property, related } = Astro.props;
+---
+<PropertyPage property={property} related={related} lang="es" />

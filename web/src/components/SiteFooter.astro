@@ -1,31 +1,22 @@
 ---
-const { lang = 'en' } = Astro.props;
-const base = lang === 'ca' ? '/ca' : '';
-const home = `${base}/`;
+import { localeBase, t } from '../lib/i18n.js';
 
-const copy = lang === 'ca'
-  ? { explore: 'Explora', sale: 'Propietats en venda', rent: 'Propietats de lloguer',
-      parishes: 'Les parròquies', advisory: 'Assessorament de residència',
-      office: 'Oficina', visit: 'Concerta una visita →',
-      rights: '© 2026 ROC Propietats. Tots els drets reservats.',
-      legal: 'Avís legal', privacy: 'Privadesa', cookies: 'Galetes' }
-  : { explore: 'Explore', sale: 'Residences for Sale', rent: 'Residences to Let',
-      parishes: 'The Parishes', advisory: 'Residency Advisory',
-      office: 'Office', visit: 'Arrange a Visit →',
-      rights: '© 2026 ROC Propietats. All rights reserved.',
-      legal: 'Legal Notice', privacy: 'Privacy', cookies: 'Cookies' };
+const { lang = 'en' } = Astro.props;
+const c = t(lang);
+const base = localeBase(lang);
+const home = `${base}/`;
 ---
-<footer data-screen-label="Footer" style="background:#13294B;color:rgba(255,255,255,.7);padding:88px 40px 36px;">
+<footer data-screen-label="Footer" style="background:var(--roc-ink,#13294B);color:rgba(255,255,255,.7);padding:88px 40px 36px;">
   <div style="max-width:1400px;margin:0 auto;">
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:48px;padding-bottom:64px;border-bottom:1px solid rgba(255,255,255,.14);">
       <div style="grid-column:span 2;min-width:0;">
         <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:28px;">
-          <span style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:32px;letter-spacing:.28em;line-height:1;color:#fff;">ROC<span style="color:#A8A898;">.</span></span>
+          <span style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:32px;letter-spacing:.28em;line-height:1;color:#fff;">ROC<span style="color:var(--roc-accent2,#A8A898);">.</span></span>
           <span style="font-size:8.5px;font-weight:500;letter-spacing:.42em;text-transform:uppercase;color:rgba(255,255,255,.6);">Propietats · Andorra</span>
         </div>
-        <div style="width:40px;height:1px;background:#8A8A7A;margin-bottom:24px;"></div>
+        <div style="width:40px;height:1px;background:var(--roc-accent,#8A8A7A);margin-bottom:24px;"></div>
         <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
-          <span style="font-size:9px;font-weight:500;letter-spacing:.34em;text-transform:uppercase;color:rgba(255,255,255,.55);">In association with</span>
+          <span style="font-size:9px;font-weight:500;letter-spacing:.34em;text-transform:uppercase;color:rgba(255,255,255,.55);">{c.inAssociation}</span>
           <span style="display:flex;flex-direction:column;align-items:center;gap:5px;">
             <img src="/brand/hamptons-wordmark.png" alt="Hamptons International" style="height:26px;width:auto;display:block;" />
             <span style="font-size:7.8px;font-weight:600;letter-spacing:.32em;line-height:1;color:#FF5D5C;padding-left:.32em;">INTERNATIONAL</span>
@@ -34,28 +25,28 @@ const copy = lang === 'ca'
       </div>
 
       <div style="display:flex;flex-direction:column;gap:12px;font-size:13.5px;">
-        <div style="font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#A8A898;margin-bottom:6px;">{copy.explore}</div>
-        <a href={`${base}/residences/?for=sale`} style="color:rgba(255,255,255,.75);">{copy.sale}</a>
-        <a href={`${base}/residences/?for=rent`} style="color:rgba(255,255,255,.75);">{copy.rent}</a>
-        <a href={`${home}#parishes`} style="color:rgba(255,255,255,.75);">{copy.parishes}</a>
-        <a href={`${home}#services`} style="color:rgba(255,255,255,.75);">{copy.advisory}</a>
+        <div style="font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--roc-accent2,#A8A898);margin-bottom:6px;">{c.footExplore}</div>
+        <a href={`${base}/residences/?for=sale`} style="color:rgba(255,255,255,.75);">{c.footSale}</a>
+        <a href={`${base}/residences/?for=rent`} style="color:rgba(255,255,255,.75);">{c.footRent}</a>
+        <a href={`${home}#parishes`} style="color:rgba(255,255,255,.75);">{c.footParishes}</a>
+        <a href={`${home}#services`} style="color:rgba(255,255,255,.75);">{c.footAdvisory}</a>
       </div>
 
       <div style="display:flex;flex-direction:column;gap:12px;font-size:13.5px;">
-        <div style="font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#A8A898;margin-bottom:6px;">{copy.office}</div>
+        <div style="font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--roc-accent2,#A8A898);margin-bottom:6px;">{c.footOffice}</div>
         <span>Ctra. General, AD400 La Massana</span>
         <a href="tel:+376747577" style="color:rgba(255,255,255,.75);">+376 747 577</a>
         <a href="mailto:immo@rocpropietats.com" style="color:rgba(255,255,255,.75);">immo@rocpropietats.com</a>
-        <a href={`${home}#contact`} style="color:rgba(255,255,255,.75);">{copy.visit}</a>
+        <a href={`${home}#contact`} style="color:rgba(255,255,255,.75);">{c.footVisit}</a>
       </div>
     </div>
 
     <div style="display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-top:28px;font-size:11.5px;color:rgba(255,255,255,.5);">
-      <span>{copy.rights}</span>
+      <span>{c.rights}</span>
       <div style="display:flex;gap:24px;">
-        <a href="https://rocpropietats.com/ca/avis-legal/" style="color:rgba(255,255,255,.5);">{copy.legal}</a>
-        <a href="https://rocpropietats.com/ca/politica-de-privadesa/" style="color:rgba(255,255,255,.5);">{copy.privacy}</a>
-        <a href="https://rocpropietats.com/ca/politica-de-galetes/" style="color:rgba(255,255,255,.5);">{copy.cookies}</a>
+        <a href="https://rocpropietats.com/ca/avis-legal/" style="color:rgba(255,255,255,.5);">{c.legal}</a>
+        <a href="https://rocpropietats.com/ca/politica-de-privadesa/" style="color:rgba(255,255,255,.5);">{c.privacy}</a>
+        <a href="https://rocpropietats.com/ca/politica-de-galetes/" style="color:rgba(255,255,255,.5);">{c.cookies}</a>
       </div>
     </div>
   </div>
